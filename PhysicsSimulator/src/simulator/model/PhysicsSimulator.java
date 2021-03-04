@@ -6,9 +6,9 @@ import org.json.JSONObject;
 
 public class PhysicsSimulator {
 	
-	private double _time;  // número de pasos que se ejecuta la simulación
+	private double _time;  // nÃºmero de pasos que se ejecuta la simulaciÃ³n
 	private ForceLaws _forceLaws;  // leyes de la fuerza a aplicar
-	private List<Body> _bodies = new ArrayList<>();  // cuerpos de la simulación
+	private List<Body> _bodies = new ArrayList<>();  // cuerpos de la simulaciÃ³n
 	private double _dt;  // incremento del tiempo
 	
 	public PhysicsSimulator(ForceLaws FL, double tRealporPaso)
@@ -28,7 +28,7 @@ public class PhysicsSimulator {
 		}
 		else
 		{
-			throw new IllegalArgumentException("Tiempo no válido");
+			throw new IllegalArgumentException("Tiempo no vÃ¡lido");
 		}
 		this._dt = 0.0;
 	}
@@ -58,21 +58,23 @@ public class PhysicsSimulator {
 	}
 	
 	public JSONObject getState() {
+		JSONObject j = new JSONObject();
 		String cadena = new String();
-		cadena = "{ \"time\":" + this._dt + ", \"bodies\": [ ";
+		cadena = "[ ";
 		for(int i = 0; i < _bodies.size(); i ++)
 		{
 			if(i != _bodies.size() - 1)
 			{
-				cadena = cadena + _bodies.get(i).toString() + ", ";
+				cadena = cadena + _bodies.get(i).getState() + ", ";
 			}
 			else
 			{
-				cadena = cadena + _bodies.get(i).toString();
+				cadena = cadena + _bodies.get(i).getState();
 			}
 		}
-		cadena += " ] }";
-		return cadena;
+		cadena += " ] ";
+		j.append("\"time\":", this._dt).append("\"bodies\":", cadena);
+		return j;
 	}
 	
 	public String toString(){
