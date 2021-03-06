@@ -29,4 +29,9 @@ public class MovingTowardsFixedPoint implements ForceLaws {
 			bi.addForce(f);
 		}
 	}
+	
+	public String toString()
+	{
+		return "Moving Towards Fixed Point";
+	}
 }
