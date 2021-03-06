@@ -13,6 +13,8 @@ public class NewtonUniversalGravitationBuilder extends Builder<ForceLaws>{
 	
 	public ForceLaws createTheInstance(JSONObject bodies)
 	{
-		return new NewtonUniversalGravitation();
+		double G = bodies.getDouble("G");
+		return new NewtonUniversalGravitation(G);
 	}
 }
+
