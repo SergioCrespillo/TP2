@@ -19,18 +19,21 @@ public class MassLosingBodyBuilder extends Builder<Body>{
 		double m = data.getDouble("mass");
 		double freq = data.getDouble("freq");
 		double factor = data.getDouble("factor");
+		
 		return new MassLosingBody(id, v, p, m, factor, freq); 
 	}
 	
 	protected JSONObject createData()
 	{
 		JSONObject data = new JSONObject();
+		
 		data.put("id", "the identifier");
 		data.put("p", "the position");
 		data.put("v", "the velocity");
 		data.put("m", "the mass");
 		data.put("freq", "the frequency");
 		data.put("factor", "the factor");
+		
 		return data;
 	}
 

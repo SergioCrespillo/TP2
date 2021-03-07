@@ -16,16 +16,19 @@ public class BasicBodyBuilder extends Builder<Body>{
 		Vector2D p = jsonArrayTodoubleArray(data.getJSONArray("p"));
 		Vector2D v = jsonArrayTodoubleArray(data.getJSONArray("v"));
 		double m = data.getDouble("m");
+		
 		return new Body(id, v, p, m);
 	}
 	
 	protected JSONObject createData()
 	{
 		JSONObject data = new JSONObject();
+		
 		data.put("id", "the identifier");
 		data.put("p", "the position");
 		data.put("v", "the velocity");
 		data.put("m", "the mass");
+		
 		return data;
 	}
 }

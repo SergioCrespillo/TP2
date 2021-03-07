@@ -2,18 +2,20 @@ package simulator.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class PhysicsSimulator {
 	
-	private double _time;  // número de pasos que se ejecuta la simulación
+	private double _time;  // numero de pasos que se ejecuta la simulacion
 	private ForceLaws _forceLaws;  // leyes de la fuerza a aplicar
-	private List<Body> _bodies = new ArrayList<>();  // cuerpos de la simulación
-	private double _dt;  // incremento del tiempo
+	private List<Body> _bodies = new ArrayList<>();  // cuerpos de la simulacion
+	private double _dt;  // tiempo actual
 	
 	public PhysicsSimulator(ForceLaws FL, double tRealporPaso)
 	{
-		if(FL != null)
+		if(FL.equals(null))
 		{
 			this._forceLaws = FL;
 		}
@@ -28,7 +30,7 @@ public class PhysicsSimulator {
 		}
 		else
 		{
-			throw new IllegalArgumentException("Tiempo no válido");
+			throw new IllegalArgumentException("Tiempo no valido");
 		}
 		this._dt = 0.0;
 	}
@@ -38,7 +40,9 @@ public class PhysicsSimulator {
 		{
 			b.resetForce();
 		}
+		
 		this._forceLaws.apply(_bodies);
+		
 		for(Body b: this._bodies)
 		{
 			b.move(_time);
@@ -59,11 +63,13 @@ public class PhysicsSimulator {
 	
 	public JSONObject getState() {
 		JSONObject j = new JSONObject();
-		String cadena = new String();
+		JSONArray ja = new JSONArray();
+		
+		/*String cadena = new String();
 		cadena = "[ ";
 		for(int i = 0; i < _bodies.size(); i ++)
 		{
-			if(i != _bodies.size() - 1)
+			/*if(i != _bodies.size() - 1)
 			{
 				cadena = cadena + _bodies.get(i).getState() + ", ";
 			}
@@ -73,7 +79,15 @@ public class PhysicsSimulator {
 			}
 		}
 		cadena += " ] ";
-		j.append("\"time\":", this._dt).append("\"bodies\":", cadena);
+		j.append("\"time\":", this._dt).append("\"bodies\":", cadena);*/
+		
+		for(Body b:this._bodies) {
+			ja.put(b.getState());
+		}
+		
+		j.put("bodies", ja);
+		j.put("time", this._time);
+		
 		return j;
 	}
 	

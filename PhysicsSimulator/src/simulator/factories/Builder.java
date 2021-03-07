@@ -30,8 +30,10 @@ public abstract class Builder<T> {
 	public JSONObject getBuilderInfo()
 	{
 		JSONObject info = new JSONObject();
+		
 		info.put("type", _typeTag);
 		info.put("data", createData());
+		
 		return info;
 	}
 	

@@ -21,11 +21,12 @@ public class Controller {
 		this._bodiesFactory = bf;
 	}
 	
-	public void run(int steps, OutputStream out) 
+	public void run(int steps, OutputStream out, InputStream expOut, StateComparator cmp) 
 	{
-		int i = 0;
+		//int i = 0;
 		PrintStream p = (out == null) ? null : new PrintStream(out);
-		String info = "{ \"states\": [";
+		JSONObject j = new JSONObject();
+		/*String info = "{ \"states\": [";
 		while(i < steps)
 		{
 			info += _sim.toString() + ",";
@@ -34,14 +35,20 @@ public class Controller {
 		}
 		info += _sim.toString() + "] }";
 		p.print(info);
-		out = p;
+		out = p;*/
+		for(int i=0;i<steps;i++) {
+			this._sim.advance();
+			j.put("states", this._sim.getState());
+			p.println(j.toString());
+		}
 	}
 	
 	public void loadBodies(InputStream in) 
 	{
 		 JSONObject jsonInupt = new JSONObject(new JSONTokener(in));
 		 JSONArray bodies = jsonInupt.getJSONArray("bodies");
+		 
 		 for (int i = 0; i < bodies.length(); i++)
-		 _sim.addBody(_bodiesFactory.createInstance(bodies.getJSONObject(i)));
+			 _sim.addBody(_bodiesFactory.createInstance(bodies.getJSONObject(i)));
 	}
 }
