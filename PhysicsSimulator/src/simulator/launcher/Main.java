@@ -18,7 +18,9 @@ import simulator.control.StateComparator;
 import simulator.factories.BasicBodyBuilder;
 import simulator.factories.Builder;
 import simulator.factories.BuilderBasedFactory;
+import simulator.factories.EpsilonEqualStatesBuilder;
 import simulator.factories.Factory;
+import simulator.factories.MassEqualStatesBuilder;
 import simulator.factories.MassLosingBodyBuilder;
 import simulator.factories.MovingTowardsFixedPointBuilder;
 import simulator.factories.NewtonUniversalGravitationBuilder;
@@ -67,6 +69,10 @@ public class Main {
 		_forceLawsFactory = new BuilderBasedFactory<ForceLaws>(forceLawsBuilders);
 
 		// TODO initialize the state comparator
+		ArrayList<Builder<StateComparator>> stateComparatorBuilders = new ArrayList<>();
+		stateComparatorBuilders.add(new MassEqualStatesBuilder());
+		stateComparatorBuilders.add(new EpsilonEqualStatesBuilder());
+		_stateComparatorFactory = new BuilderBasedFactory<StateComparator>(stateComparatorBuilders);
 	}
 
 	private static void parseArgs(String[] args) {
@@ -89,6 +95,7 @@ public class Main {
 			parseDeltaTimeOption(line);
 			parseForceLawsOption(line);
 			parseStateComparatorOption(line);
+			parseEpsilonTimeOption(line);
 
 			// if there are some remaining arguments, then something wrong is
 			// provided in the command line!
@@ -118,7 +125,7 @@ public class Main {
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Bodies JSON input file.").build());
 
 		// TODO add support for -o, -eo, and -s (add corresponding information to
-		// cmdLineOptions)
+		cmdLineOptions.addOption(Option.builder("eo").longOpt("expected-output").hasArg().desc("The expected output file. If not provided no comparison is applied").build());
 		
 		// output file
 		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg().desc("Output file, where output is written. Default value: the standard output.").build());
@@ -202,10 +209,19 @@ public class Main {
 	private static void parseDeltaTimeOption(CommandLine line) throws ParseException {
 		String dt = line.getOptionValue("dt", _dtimeDefaultValue.toString());
 		try {
-			_dtime = Double.parseDouble(dt);
-			assert (_dtime > 0);
-		} catch (Exception e) {
-			throw new ParseException("Invalid delta-time value: " + dt);
+			if ((_outFile == null)) {
+				throw new ParseException("An output file of bodies is required");
+			}
+		}
+		catch (Exception e) {
+				throw new ParseException("Invalid delta-time value: " + dt);
+		}
+	}
+	
+	private static void parseEpsilonTimeOption(CommandLine line) throws ParseException {
+		_outFile = line.getOptionValue("eo");
+		if ((_outFile == null)) {
+			throw new ParseException("An output file of bodies is required");
 		}
 	}
 
@@ -270,8 +286,10 @@ public class Main {
 		ForceLaws forceLaws = _forceLawsFactory.createInstance(_forceLawsInfo);
 		PhysicsSimulator sim = new PhysicsSimulator(forceLaws,_dtime);
 		Controller ctrl = new Controller(sim,_bodyFactory);
+		StateComparator sc = _stateComparatorFactory.createInstance(_stateComparatorInfo);
+		
 		ctrl.loadBodies(is);
-		ctrl.run(_steps, os);
+		ctrl.run(_steps, os, is, sc);
 	}
 
 	private static void start(String[] args) throws Exception {
