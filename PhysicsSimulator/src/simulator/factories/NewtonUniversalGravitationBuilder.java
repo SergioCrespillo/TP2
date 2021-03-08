@@ -6,15 +6,36 @@ import simulator.model.NewtonUniversalGravitation;
 
 public class NewtonUniversalGravitationBuilder extends Builder<ForceLaws>{
 	
+	private static final double cG = 6.67E-11;
+	
 	public NewtonUniversalGravitationBuilder()
 	{
 		super._typeTag = "nlug";
 	}
 	
-	public ForceLaws createTheInstance(JSONObject bodies)
+	public ForceLaws createTheInstance(JSONObject info)
 	{
-		double G = bodies.getDouble("G");
+		JSONObject data = info.getJSONObject("data");
+		double G;
+		
+		if(data.isNull("G")) {
+			G = cG;
+		}
+		else {
+			G = data.getDouble("G");
+		}
+		
 		return new NewtonUniversalGravitation(G);
+	}
+	
+	protected JSONObject createData()
+	{
+		JSONObject data = new JSONObject();
+		
+		data.put("G", "gravitational constant");
+		data.put("desc", "Newton’s law of universal gravitation\"");
+		
+		return data;
 	}
 }
 

@@ -11,10 +11,7 @@ public abstract class Builder<T> {
 	
 	protected Vector2D jsonArrayTodoubleArray(JSONArray ja)
 	{
-		Vector2D da = new Vector2D();
-		for (int i = 0; i < ja.length(); i++)
-			da = (Vector2D) ja.get(i);
-		return da;
+		return new Vector2D(ja.getDouble(0),ja.getDouble(1));
 	}
 	
 	public T createInstance(JSONObject info) {
@@ -25,7 +22,7 @@ public abstract class Builder<T> {
 		return b;
 	}
 	
-	protected abstract T createTheInstance(JSONObject jsonObject);
+	protected abstract T createTheInstance(JSONObject info);
 	
 	public JSONObject getBuilderInfo()
 	{

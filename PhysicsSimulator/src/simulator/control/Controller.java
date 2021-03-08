@@ -6,6 +6,8 @@ import java.io.PrintStream;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import simulator.excepcions.ControllerException;
 import simulator.factories.Factory;
 import simulator.model.Body;
 import simulator.model.PhysicsSimulator;
@@ -21,7 +23,7 @@ public class Controller {
 		this._bodiesFactory = bf;
 	}
 	
-	public void run(int steps, OutputStream out, InputStream expOut, StateComparator cmp) 
+	public void run(int steps, OutputStream out, InputStream expOut, StateComparator cmp) throws ControllerException 
 	{
 		//int i = 0;
 		PrintStream p = (out == null) ? null : new PrintStream(out);
@@ -36,10 +38,27 @@ public class Controller {
 		info += _sim.toString() + "] }";
 		p.print(info);
 		out = p;*/
-		for(int i=0;i<steps;i++) {
-			this._sim.advance();
+		if(steps < 1) {
 			j.put("states", this._sim.getState());
 			p.println(j.toString());
+		}
+		else if(!expOut.equals(null)) {
+			JSONObject jsonInput = new JSONObject(new JSONTokener(expOut));
+			for(int i=0;i<steps;i++) {
+				this._sim.advance();
+				j.put("states", this._sim.getState());
+				if(!cmp.equal(j, jsonInput)) {
+					throw new ControllerException("Fallo en el paso numero " + steps);
+				}
+				p.println(j.toString());
+			}
+		}
+		else {
+			for(int i=0;i<steps;i++) {
+				this._sim.advance();
+				j.put("states", this._sim.getState());
+				p.println(j.toString());
+			}
 		}
 	}
 	

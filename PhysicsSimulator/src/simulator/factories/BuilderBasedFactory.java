@@ -13,24 +13,22 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 	public BuilderBasedFactory(List<Builder<T>> builders) {	
 		this._builders = new ArrayList<>(builders);
 		
-		for(Builder<?> b: this._builders){
+		for(Builder<T> b: this._builders){
 			this._factoryElements.add(b.getBuilderInfo());
 		}
 	}
 		
 	@Override
 	public T createInstance(JSONObject info) throws IllegalArgumentException { 	
-		try{
-			for(Builder<T> b: _builders){
-				if(b.createInstance(info) != null){
-					return b.createInstance(info);
-				}
+		if (info != null) {
+			for (Builder<T> bb : _builders) {
+				T o = bb.createInstance(info);
+				if (o != null)
+					return o;
 			}
 		}
-		catch(IllegalArgumentException e){
-			throw new IllegalArgumentException("Error en la instancia");
-		}
-		return null;
+
+		throw new IllegalArgumentException("Invalid value for createInstance: " + info);
 	}
 
 	@Override
