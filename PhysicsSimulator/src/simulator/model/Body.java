@@ -4,8 +4,6 @@ import org.json.JSONObject;
 
 import simulator.misc.Vector2D;
 
-//HOla
-
 public class Body {
 	protected String id;
 	protected Vector2D velocity;
