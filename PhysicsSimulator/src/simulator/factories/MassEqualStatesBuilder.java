@@ -20,8 +20,6 @@ public class MassEqualStatesBuilder extends Builder<StateComparator>{
 	{
 		JSONObject data = new JSONObject();
 		
-		data.put("desc", "Mass StateComparator");
-		
 		return data;
 	}
 

@@ -23,7 +23,7 @@ public class MovingTowardsFixedPoint implements ForceLaws {
 				f = bi.getPosition().direction().scale((-g)*bi.getMass());
 			}
 			else {
-				f = c.minus(bi.getPosition().direction()).scale(bi.getMass()*(-g)); 
+				f = c.minus(bi.getPosition()).direction().scale(bi.getMass()*(g)); 
 			}
 			
 			bi.addForce(f);

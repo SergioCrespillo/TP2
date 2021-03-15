@@ -26,13 +26,13 @@ public class PhysicsSimulator {
 		
 		if(tRealporPaso >= 0)
 		{
-			this._time = tRealporPaso;
+			this._dt = tRealporPaso;
 		}
 		else
 		{
 			throw new IllegalArgumentException("Tiempo no valido");
 		}
-		this._dt = 0.0;
+		this._time = 0.0;
 	}
 	
 	public void advance(){
@@ -45,9 +45,9 @@ public class PhysicsSimulator {
 		
 		for(Body b: this._bodies)
 		{
-			b.move(_time);
-			_dt += _time;
+			b.move(_dt);
 		}
+		_time += _dt;
 	}
 	
 	public void addBody(Body b){
@@ -64,22 +64,6 @@ public class PhysicsSimulator {
 	public JSONObject getState() {
 		JSONObject j = new JSONObject();
 		JSONArray ja = new JSONArray();
-		
-		/*String cadena = new String();
-		cadena = "[ ";
-		for(int i = 0; i < _bodies.size(); i ++)
-		{
-			/*if(i != _bodies.size() - 1)
-			{
-				cadena = cadena + _bodies.get(i).getState() + ", ";
-			}
-			else
-			{
-				cadena = cadena + _bodies.get(i).getState();
-			}
-		}
-		cadena += " ] ";
-		j.append("\"time\":", this._dt).append("\"bodies\":", cadena);*/
 		
 		for(Body b:this._bodies) {
 			ja.put(b.getState());

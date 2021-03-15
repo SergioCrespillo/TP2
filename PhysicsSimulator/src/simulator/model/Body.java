@@ -63,14 +63,16 @@ public class Body {
         velocity = velocity.plus(a.scale(t));
 	}
 	
+	//Añadir equals
+	
 	public JSONObject getState() {
 		JSONObject j = new JSONObject();
 		
 		j.put("id", id);
 		j.put("m", mass);
-		j.put("p", position);
-		j.put("v", velocity);
-		j.put("f", force);
+		j.put("p", position.asJSONArray());
+		j.put("v", velocity.asJSONArray());
+		j.put("f", force.asJSONArray());
 		
 		return j;
 	}

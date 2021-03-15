@@ -8,6 +8,7 @@ import simulator.misc.Vector2D;
 public abstract class Builder<T> {
 	
 	protected String _typeTag; // indica el tipo de objeto a construir
+	protected String desc;
 	
 	protected Vector2D jsonArrayTodoubleArray(JSONArray ja)
 	{
@@ -30,6 +31,7 @@ public abstract class Builder<T> {
 		
 		info.put("type", _typeTag);
 		info.put("data", createData());
+		info.put("desc", desc);
 		
 		return info;
 	}

@@ -2,6 +2,7 @@ package simulator.control;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import simulator.model.Body;
@@ -20,12 +21,11 @@ public class EpsilonEqualStates implements StateComparator {
 		
 		if(s1.get("time").equals(s2.get("time"))) {
 			iguales = true;
-			List<Body> s1Bodies = (List<Body>) s1.get("bodies");
-			List<Body> s2Bodies = (List<Body>) s2.get("bodies");
-			int i = 0;
+			JSONArray j1 = s1.getJSONArray("bodies");
+			JSONArray j2 = s2.getJSONArray("bodies");
 			
-			while(i < s1Bodies.size() && iguales) {
-				if(s1Bodies.get(i).getId().equals(s2Bodies.get(i).getId()) 
+			for(int i=0;i<j1.length();i++){
+				if(j1.getJSONObject(i).getString("id").equals(s2Bodies.get(i).getId()) 
 						&& Math.abs(s1Bodies.get(i).getMass()-s2Bodies.get(i).getMass()) <= eps 
 						&& s1Bodies.get(i).getPosition().distanceTo(s2Bodies.get(i).getPosition()) <= eps
 						&& s1Bodies.get(i).getVelocity().distanceTo(s2Bodies.get(i).getVelocity()) <= eps
@@ -39,5 +39,10 @@ public class EpsilonEqualStates implements StateComparator {
 			}
 		}
 		return iguales;
+	}
+	
+	public boolean iguales(JSONArray j1, JSONArray j2) {
+		//Metodo de jsonArray a vector2d y comparas con distance to
+		Vector2D v1 = j1.
 	}
 }

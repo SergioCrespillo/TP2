@@ -13,15 +13,12 @@ public class BasicBodyBuilder extends Builder<Body>{
 	public Body createTheInstance(JSONObject info)
 	{	
 		Body b = null;
-		JSONObject data;
 		
 		if(info.get("type").equals("basic")) {
-			data = info.getJSONObject("data");
-			
-			String id = data.getString("id");
-			Vector2D p = jsonArrayTodoubleArray(data.getJSONArray("p"));
-			Vector2D v = jsonArrayTodoubleArray(data.getJSONArray("v"));
-			double m = data.getDouble("m");
+			String id = info.getString("id");
+			Vector2D p = jsonArrayTodoubleArray(info.getJSONArray("p"));
+			Vector2D v = jsonArrayTodoubleArray(info.getJSONArray("v"));
+			double m = info.getDouble("m");
 			
 			b = new Body(id,v,p,m);
 		}
@@ -37,7 +34,6 @@ public class BasicBodyBuilder extends Builder<Body>{
 		data.put("p", "the position");
 		data.put("v", "the velocity");
 		data.put("m", "the mass");
-		data.put("desc", "Basic Body");
 		
 		return data;
 	}

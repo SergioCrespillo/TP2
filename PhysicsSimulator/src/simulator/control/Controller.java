@@ -25,41 +25,40 @@ public class Controller {
 	
 	public void run(int steps, OutputStream out, InputStream expOut, StateComparator cmp) throws ControllerException 
 	{
-		//int i = 0;
 		PrintStream p = (out == null) ? null : new PrintStream(out);
 		JSONObject j = new JSONObject();
-		/*String info = "{ \"states\": [";
-		while(i < steps)
-		{
-			info += _sim.toString() + ",";
-			_sim.advance();
-			i++; 
-		}
-		info += _sim.toString() + "] }";
-		p.print(info);
-		out = p;*/
-		if(steps < 1) {
-			j.put("states", this._sim.getState());
-			p.println(j.toString());
-		}
-		else if(!expOut.equals(null)) {
+		
+		p.println("{");
+		p.println("\"states\": [");
+		
+		j = this._sim.getState();
+		p.println(j.toString());
+		
+		if(!expOut.equals(null)) {
 			JSONObject jsonInput = new JSONObject(new JSONTokener(expOut));
-			for(int i=0;i<steps;i++) {
-				this._sim.advance();
-				j.put("states", this._sim.getState());
-				if(!cmp.equal(j, jsonInput)) {
+			JSONArray j1 = jsonInput.getJSONArray("states");
+			
+			if(!cmp.equal(j, j1.getJSONObject(0))) {
+				throw new ControllerException("Fallo en el paso numero " + steps);
+			}
+		}
+		
+		for(int i=1;i<steps;i++) {
+			this._sim.advance();
+			j = this._sim.getState();
+			p.println(j.toString());
+			
+			if(!expOut.equals(null)) {
+				JSONObject jsonInput = new JSONObject(new JSONTokener(expOut));
+				JSONArray j1 = jsonInput.getJSONArray("states");
+				
+				if(!cmp.equal(j, j1.getJSONObject(i))) {
 					throw new ControllerException("Fallo en el paso numero " + steps);
 				}
-				p.println(j.toString());
 			}
 		}
-		else {
-			for(int i=0;i<steps;i++) {
-				this._sim.advance();
-				j.put("states", this._sim.getState());
-				p.println(j.toString());
-			}
-		}
+		p.println("]}");
+		
 	}
 	
 	public void loadBodies(InputStream in) 

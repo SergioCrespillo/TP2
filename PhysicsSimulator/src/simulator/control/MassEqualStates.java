@@ -14,6 +14,7 @@ public class MassEqualStates implements StateComparator {
 		
 		if(s1.get("time").equals(s2.get("time"))) {
 			iguales = true;
+			//hacer como en epsilosEqualStates
 			List<Body> s1Bodies = (List<Body>) s1.get("bodies");
 			List<Body> s2Bodies = (List<Body>) s2.get("bodies");
 			int i = 0;

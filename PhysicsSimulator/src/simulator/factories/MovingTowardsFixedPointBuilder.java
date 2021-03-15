@@ -18,14 +18,15 @@ public class MovingTowardsFixedPointBuilder extends Builder<ForceLaws>{
 		double g;
 		Vector2D c;
 		
-		if(data.isNull("c")) {
+		if(!data.has("c")) {
 			c = new Vector2D();
 		}
 		else {
+			//igual que basic body
 			c = (Vector2D) data.get("c");
 		}
 		
-		if(data.isNull("g")) {
+		if(!data.has("g")) {
 			g = 9.81;
 		}
 		else{
