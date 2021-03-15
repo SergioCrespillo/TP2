@@ -16,14 +16,13 @@ public class NewtonUniversalGravitationBuilder extends Builder<ForceLaws>{
 	
 	public ForceLaws createTheInstance(JSONObject info)
 	{
-		JSONObject data = info.getJSONObject("data");
 		double G;
 		
-		if(data.isNull("G")) {
+		if(!info.has("G")) {
 			G = cG;
 		}
 		else {
-			G = data.getDouble("G");
+			G = info.getDouble("G");
 		}
 		
 		return new NewtonUniversalGravitation(G);

@@ -1,5 +1,6 @@
 package simulator.launcher;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,10 +41,11 @@ public class Main {
 
 	// some attributes to stores values corresponding to command-line parameters
 	//
-	private static Double _dtime = null;
+	private static Double _dtime = 0.0;
 	private static String _inFile = null;
 	private static String _outFile = null;
-	private static Integer _steps = null;
+	private static String _expOut = null;
+	private static Integer _steps = 0;
 	private static JSONObject _forceLawsInfo = null;
 	private static JSONObject _stateComparatorInfo = null;
 
@@ -191,9 +193,6 @@ public class Main {
 	
 	private static void parseOutputFileOption(CommandLine line) throws ParseException {
 		_outFile = line.getOptionValue("o");
-		if ((_outFile == null)) {
-			throw new ParseException("An output file of bodies is required");
-		}
 	}
 	
 	private static void parseStepsOption(CommandLine line) throws ParseException {
@@ -209,9 +208,8 @@ public class Main {
 	private static void parseDeltaTimeOption(CommandLine line) throws ParseException {
 		String dt = line.getOptionValue("dt", _dtimeDefaultValue.toString());
 		try {
-			if ((_outFile == null)) {
-				throw new ParseException("An output file of bodies is required");
-			}
+			_dtime = Double.parseDouble(dt);
+			assert(_dtime >= 0);
 		}
 		catch (Exception e) {
 				throw new ParseException("Invalid delta-time value: " + dt);
@@ -219,10 +217,7 @@ public class Main {
 	}
 	
 	private static void parseEpsilonTimeOption(CommandLine line) throws ParseException {
-		_outFile = line.getOptionValue("eo");
-		if ((_outFile == null)) {
-			throw new ParseException("An output file of bodies is required");
-		}
+		_expOut = line.getOptionValue("eo");
 	}
 
 	private static JSONObject parseWRTFactory(String v, Factory<?> factory) {
@@ -282,14 +277,21 @@ public class Main {
 	private static void startBatchMode() throws Exception {
 		// TODO complete this method
 		InputStream is = new FileInputStream(_inFile);
-		OutputStream os = (_outFile == null) ? System.out: new PrintStream(_outFile);
+		InputStream eO;
+		if(_expOut.equals(null)) {
+			eO = null;
+		}
+		else {
+			eO = new FileInputStream(_expOut);
+		}
+		OutputStream os = (_outFile == null) ? System.out:new PrintStream(_outFile);
 		ForceLaws forceLaws = _forceLawsFactory.createInstance(_forceLawsInfo);
 		PhysicsSimulator sim = new PhysicsSimulator(forceLaws,_dtime);
 		Controller ctrl = new Controller(sim,_bodyFactory);
 		StateComparator sc = _stateComparatorFactory.createInstance(_stateComparatorInfo);
 		
 		ctrl.loadBodies(is);
-		ctrl.run(_steps, os, is, sc);
+		ctrl.run(_steps, os, eO, sc);
 	}
 
 	private static void start(String[] args) throws Exception {

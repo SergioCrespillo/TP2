@@ -9,17 +9,20 @@ public class EpsilonEqualStatesBuilder extends Builder<StateComparator>{
 
 	private static final double EPS = 0.0;
 	
+	public EpsilonEqualStatesBuilder() {
+		this._typeTag = "epseq";
+		this.desc = "Epsilon Equal State";
+	}
+	
 	@Override
 	protected StateComparator createTheInstance(JSONObject info) {
-		//info=data
-		JSONObject data = info.getJSONObject("data");
 		double eps;
 		
-		if(data.has("eps")) {
+		if(!info.has("eps")) {
 			eps = EPS;
 		}
 		else {
-			eps=data.getDouble("eps");
+			eps=info.getDouble("eps");
 		}
 		
 		return new EpsilonEqualStates(eps);

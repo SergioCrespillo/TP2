@@ -9,18 +9,17 @@ public class MassLosingBodyBuilder extends Builder<Body>{
 	
 	public MassLosingBodyBuilder(){
 		super._typeTag = "mlb";
+		this.desc = "Mass lossing body";
 	}
 	
 	public Body createTheInstance(JSONObject info)
-	{
-		JSONObject data = info.getJSONObject("data");
-		
-		String id = data.getString("id");
-		Vector2D p = jsonArrayTodoubleArray(data.getJSONArray("p"));
-		Vector2D v = jsonArrayTodoubleArray(data.getJSONArray("v"));
-		double m = data.getDouble("mass");
-		double freq = data.getDouble("freq");
-		double factor = data.getDouble("factor");
+	{	
+		String id = info.getString("id");
+		Vector2D p = jsonArrayTodoubleArray(info.getJSONArray("p"));
+		Vector2D v = jsonArrayTodoubleArray(info.getJSONArray("v"));
+		double m = info.getDouble("mass");
+		double freq = info.getDouble("freq");
+		double factor = info.getDouble("factor");
 		
 		return new MassLosingBody(id, v, p, m, factor, freq); 
 	}
@@ -35,7 +34,6 @@ public class MassLosingBodyBuilder extends Builder<Body>{
 		data.put("m", "the mass");
 		data.put("freq", "the frequency");
 		data.put("factor", "the factor");
-		data.put("desc", "Mass Losing Body");
 		
 		return data;
 	}

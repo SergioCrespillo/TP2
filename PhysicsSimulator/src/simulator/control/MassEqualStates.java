@@ -2,6 +2,7 @@ package simulator.control;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import simulator.model.Body;
@@ -14,14 +15,13 @@ public class MassEqualStates implements StateComparator {
 		
 		if(s1.get("time").equals(s2.get("time"))) {
 			iguales = true;
-			//hacer como en epsilosEqualStates
-			List<Body> s1Bodies = (List<Body>) s1.get("bodies");
-			List<Body> s2Bodies = (List<Body>) s2.get("bodies");
+			JSONArray j1 = s1.getJSONArray("bodies");
+			JSONArray j2 = s2.getJSONArray("bodies");
 			int i = 0;
 			
-			while(i < s1Bodies.size() && iguales) {
-				if(s1Bodies.get(i).getId().equals(s2Bodies.get(i).getId()) && 
-					s1Bodies.get(i).getMass() == s2Bodies.get(i).getMass()) {
+			while(i < j1.length() && iguales) {
+				if(j1.getJSONObject(i).getString("id").equals(j2.getJSONObject(i).getString("id")) && 
+						j1.getJSONObject(i).getDouble("mass") == j2.getJSONObject(i).getDouble("mass")) {
 					iguales = true;
 				}
 				else {

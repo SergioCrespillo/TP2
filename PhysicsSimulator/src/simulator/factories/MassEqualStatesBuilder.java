@@ -9,18 +9,11 @@ public class MassEqualStatesBuilder extends Builder<StateComparator>{
 
 	public MassEqualStatesBuilder(){
 		super._typeTag = "masseq";
+		this.desc = "Mass Equal State";
 	}
 	
 	@Override
 	protected StateComparator createTheInstance(JSONObject info) {
 		return new MassEqualStates();
 	}
-	
-	protected JSONObject createData()
-	{
-		JSONObject data = new JSONObject();
-		
-		return data;
-	}
-
 }

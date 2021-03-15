@@ -8,20 +8,19 @@ public class BasicBodyBuilder extends Builder<Body>{
 	
 	public BasicBodyBuilder(){
 		this._typeTag = "basic";
+		this.desc = "Basic Body";
 	}
 	
 	public Body createTheInstance(JSONObject info)
 	{	
 		Body b = null;
 		
-		if(info.get("type").equals("basic")) {
-			String id = info.getString("id");
-			Vector2D p = jsonArrayTodoubleArray(info.getJSONArray("p"));
-			Vector2D v = jsonArrayTodoubleArray(info.getJSONArray("v"));
-			double m = info.getDouble("m");
-			
-			b = new Body(id,v,p,m);
-		}
+		String id = info.getString("id");
+		Vector2D p = jsonArrayTodoubleArray(info.getJSONArray("p"));
+		Vector2D v = jsonArrayTodoubleArray(info.getJSONArray("v"));
+		double m = info.getDouble("m");
+		
+		b = new Body(id,v,p,m);
 		
 		return b;
 	}

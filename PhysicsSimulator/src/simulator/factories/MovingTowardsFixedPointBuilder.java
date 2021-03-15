@@ -10,27 +10,26 @@ public class MovingTowardsFixedPointBuilder extends Builder<ForceLaws>{
 	
 	public MovingTowardsFixedPointBuilder(){
 		super._typeTag = "mtcp";
+		this.desc = "Moving Towards Fixed Point law";
 	}
 	
 	public ForceLaws createTheInstance(JSONObject info)
 	{
-		JSONObject data = info.getJSONObject("data");
 		double g;
 		Vector2D c;
 		
-		if(!data.has("c")) {
+		if(!info.has("c")) {
 			c = new Vector2D();
 		}
 		else {
-			//igual que basic body
-			c = (Vector2D) data.get("c");
+			c = jsonArrayTodoubleArray(info.getJSONArray("c"));
 		}
 		
-		if(!data.has("g")) {
+		if(!info.has("g")) {
 			g = 9.81;
 		}
 		else{
-			g = data.getDouble("g");
+			g = info.getDouble("g");
 		}
 		
 		return new MovingTowardsFixedPoint(g, c);
@@ -42,7 +41,6 @@ public class MovingTowardsFixedPointBuilder extends Builder<ForceLaws>{
 		
 		data.put("c", "center of the universe");
 		data.put("g", "the gravity");
-		data.put("desc", "Moving Towards Fixed Point law");
 		
 		return data;
 	}
