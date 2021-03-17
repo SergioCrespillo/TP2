@@ -64,7 +64,27 @@ public class Body {
         velocity = velocity.plus(a.scale(t));
 	}
 	
-	//Añadir equals
+	public boolean equals(Object obj) {
+		Body b;
+		boolean iguales=false;
+		
+		if(this.equals(obj)) {
+			iguales=true;
+		}
+		else if(this.getClass() != obj.getClass()) {
+			iguales=false;
+		}
+		else if(obj.equals(null)) {
+			iguales=false;
+		}
+		else {
+			b = (Body) obj;
+			if(this.id.equals(b.id)) {
+				iguales=true;
+			}
+		}
+		return iguales;
+	}
 	
 	public JSONObject getState() {
 		JSONObject j = new JSONObject();
