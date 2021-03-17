@@ -9,7 +9,7 @@ import simulator.model.MovingTowardsFixedPoint;
 public class MovingTowardsFixedPointBuilder extends Builder<ForceLaws>{
 	
 	public MovingTowardsFixedPointBuilder(){
-		super._typeTag = "mtcp";
+		super._typeTag = "mtfp";
 		this.desc = "Moving Towards Fixed Point law";
 	}
 	

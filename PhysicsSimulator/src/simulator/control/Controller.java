@@ -34,7 +34,7 @@ public class Controller {
 		j = this._sim.getState();
 		p.println(j.toString());
 		
-		if(!expOut.equals(null)) {
+		if(expOut != null) {
 			JSONObject jsonInput = new JSONObject(new JSONTokener(expOut));
 			JSONArray j1 = jsonInput.getJSONArray("states");
 			
@@ -48,7 +48,7 @@ public class Controller {
 			j = this._sim.getState();
 			p.println(j.toString());
 			
-			if(!expOut.equals(null)) {
+			if(expOut != null) {
 				JSONObject jsonInput = new JSONObject(new JSONTokener(expOut));
 				JSONArray j1 = jsonInput.getJSONArray("states");
 				
@@ -59,7 +59,6 @@ public class Controller {
 		}
 		p.println("]");
 		p.println("}");
-		
 	}
 	
 	public void loadBodies(InputStream in) 

@@ -10,7 +10,7 @@ public class EpsilonEqualStatesBuilder extends Builder<StateComparator>{
 	private static final double EPS = 0.0;
 	
 	public EpsilonEqualStatesBuilder() {
-		this._typeTag = "epseq";
+		this._typeTag = "espeq";
 		this.desc = "Epsilon Equal State";
 	}
 	

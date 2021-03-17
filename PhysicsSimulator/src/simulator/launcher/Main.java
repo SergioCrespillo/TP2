@@ -36,7 +36,7 @@ public class Main {
 	//
 	private final static Double _dtimeDefaultValue = 2500.0;
 	private final static String _forceLawsDefaultValue = "nlug";
-	private final static String _stateComparatorDefaultValue = "epseq";
+	private final static String _stateComparatorDefaultValue = "espeq";
 	private final static Integer _stepsDefaultValue = 150;
 
 	// some attributes to stores values corresponding to command-line parameters
@@ -277,12 +277,9 @@ public class Main {
 	private static void startBatchMode() throws Exception {
 		// TODO complete this method
 		InputStream is = new FileInputStream(_inFile);
-		InputStream eO;
-		if(_expOut.equals(null)) {
-			eO = null;
-		}
-		else {
-			eO = new FileInputStream(_expOut);
+		InputStream eo = null;
+		if(_expOut != null) {
+			eo = new FileInputStream(new File(_expOut));
 		}
 		OutputStream os = (_outFile == null) ? System.out:new PrintStream(_outFile);
 		ForceLaws forceLaws = _forceLawsFactory.createInstance(_forceLawsInfo);
@@ -291,7 +288,7 @@ public class Main {
 		StateComparator sc = _stateComparatorFactory.createInstance(_stateComparatorInfo);
 		
 		ctrl.loadBodies(is);
-		ctrl.run(_steps, os, eO, sc);
+		ctrl.run(_steps, os, eo, sc);
 	}
 
 	private static void start(String[] args) throws Exception {
