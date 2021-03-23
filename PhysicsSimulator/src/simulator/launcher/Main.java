@@ -2,6 +2,7 @@ package simulator.launcher;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -217,7 +218,7 @@ public class Main {
 	}
 	
 	private static void parseEpsilonTimeOption(CommandLine line) throws ParseException {
-		_expOut = line.getOptionValue("eo");
+		_expOut = line.getOptionValue("eo"); 
 	}
 
 	private static JSONObject parseWRTFactory(String v, Factory<?> factory) {
@@ -281,7 +282,7 @@ public class Main {
 		if(_expOut != null) {
 			eo = new FileInputStream(new File(_expOut));
 		}
-		OutputStream os = (_outFile == null) ? System.out:new PrintStream(_outFile);
+		OutputStream os = (_outFile == null) ? System.out:new FileOutputStream(new File(_outFile));
 		ForceLaws forceLaws = _forceLawsFactory.createInstance(_forceLawsInfo);
 		PhysicsSimulator sim = new PhysicsSimulator(forceLaws,_dtime);
 		Controller ctrl = new Controller(sim,_bodyFactory);

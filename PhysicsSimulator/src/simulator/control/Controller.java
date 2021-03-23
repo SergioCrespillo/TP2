@@ -25,7 +25,7 @@ public class Controller {
 	
 	public void run(int steps, OutputStream out, InputStream expOut, StateComparator cmp) throws ControllerException 
 	{
-		PrintStream p = (out == null) ? null : new PrintStream(out);
+		PrintStream p = new PrintStream(out);
 		JSONObject j = new JSONObject();
 		
 		p.println("{");

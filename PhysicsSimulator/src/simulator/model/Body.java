@@ -68,13 +68,13 @@ public class Body {
 		Body b;
 		boolean iguales=false;
 		
-		if(this.equals(obj)) {
+		if(this == obj) {
 			iguales=true;
 		}
 		else if(this.getClass() != obj.getClass()) {
 			iguales=false;
 		}
-		else if(obj.equals(null)) {
+		else if(obj == null) {
 			iguales=false;
 		}
 		else {
