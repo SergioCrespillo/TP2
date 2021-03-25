@@ -14,9 +14,9 @@ public class Body {
 	
 	public Body(String id, Vector2D v, Vector2D p, double m) {
 		this.id = id;
-		velocity = new Vector2D(v);
-		force = new Vector2D(0,0);
-		position = new Vector2D(p);
+		velocity = v; //new Vector2D(v);
+		force = new Vector2D();
+		position = p; //new Vector2D(p);
 		mass = m;
 	}
 	
@@ -41,7 +41,7 @@ public class Body {
 	}
 	
 	void addForce(Vector2D f) {
-		force.plus(f);
+		force = force.plus(f);
 	}
 	
 	void resetForce() {
@@ -55,7 +55,7 @@ public class Body {
 			a = new Vector2D();
 		}
 		else {
-			a = new Vector2D(force.getX()/mass,force.getY()/mass);
+			a = force.scale(1.0/mass);
 		}
 		
 		// update position vector

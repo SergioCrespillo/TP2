@@ -32,7 +32,7 @@ public class Controller {
 		p.println("\"states\": [");
 		
 		j = this._sim.getState();
-		p.println(j.toString());
+		p.println(j);
 		
 		if(expOut != null) {
 			JSONObject jsonInput = new JSONObject(new JSONTokener(expOut));
@@ -46,7 +46,8 @@ public class Controller {
 		for(int i=1;i<steps;i++) {
 			this._sim.advance();
 			j = this._sim.getState();
-			p.println(j.toString());
+			p.println(",");
+			p.println(j);
 			
 			if(expOut != null) {
 				JSONObject jsonInput = new JSONObject(new JSONTokener(expOut));
