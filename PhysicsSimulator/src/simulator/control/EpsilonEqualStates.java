@@ -29,10 +29,7 @@ public class EpsilonEqualStates implements StateComparator {
 						&& Math.abs((j1.getJSONObject(i).getDouble("mass"))-(j2.getJSONObject(i).getDouble("mass"))) <= eps 
 						&& distanceToPosition(j1, j2, i, "p") <= eps
 						&& distanceToPosition(j1, j2, i, "v") <= eps
-						&& distanceToPosition(j1, j2, i, "f") <= eps)
-						/*&& s1Bodies.get(i).getPosition().distanceTo(s2Bodies.get(i).getPosition()) <= eps
-						&& s1Bodies.get(i).getVelocity().distanceTo(s2Bodies.get(i).getVelocity()) <= eps
-						&& s1Bodies.get(i).getForce().distanceTo(s2Bodies.get(i).getForce()) <= eps)*/ {
+						&& distanceToPosition(j1, j2, i, "f") <= eps) {
 					iguales = true;
 				}
 				else {
@@ -54,7 +51,6 @@ public class EpsilonEqualStates implements StateComparator {
 	
 	private Vector2D jsonArrayTodoubleArray(JSONArray ja)
 	{
-		
 		return new Vector2D(ja.getDouble(0),ja.getDouble(1));
 	}
 }

@@ -8,6 +8,8 @@ import simulator.model.MovingTowardsFixedPoint;
 
 public class MovingTowardsFixedPointBuilder extends Builder<ForceLaws>{
 	
+	protected static final double G = 9.8;
+	
 	public MovingTowardsFixedPointBuilder(){
 		super._typeTag = "mtfp";
 		this.desc = "Moving Towards Fixed Point law";
@@ -26,7 +28,7 @@ public class MovingTowardsFixedPointBuilder extends Builder<ForceLaws>{
 		}
 		
 		if(!info.has("g")) {
-			g = 9.81;
+			g = G;
 		}
 		else{
 			g = info.getDouble("g");
