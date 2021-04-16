@@ -17,7 +17,7 @@ public class MassLosingBodyBuilder extends Builder<Body>{
 		String id = info.getString("id");
 		Vector2D p = jsonArrayTodoubleArray(info.getJSONArray("p"));
 		Vector2D v = jsonArrayTodoubleArray(info.getJSONArray("v"));
-		double m = info.getDouble("mass");
+		double m = info.getDouble("m");
 		double freq = info.getDouble("freq");
 		double factor = info.getDouble("factor");
 		
