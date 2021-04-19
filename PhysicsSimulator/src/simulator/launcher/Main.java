@@ -7,6 +7,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -30,6 +33,7 @@ import simulator.factories.NoForceBuilder;
 import simulator.model.Body;
 import simulator.model.ForceLaws;
 import simulator.model.PhysicsSimulator;
+import simulator.view.MainWindow;
 
 public class Main {
 
@@ -39,6 +43,7 @@ public class Main {
 	private final static String _forceLawsDefaultValue = "nlug";
 	private final static String _stateComparatorDefaultValue = "espeq";
 	private final static Integer _stepsDefaultValue = 150;
+	private final static String _modeDefaultValue = "batch";
 
 	// some attributes to stores values corresponding to command-line parameters
 	//
@@ -47,6 +52,7 @@ public class Main {
 	private static String _outFile = null;
 	private static String _expOut = null;
 	private static Integer _steps = 0;
+	private static String _mode = null;
 	private static JSONObject _forceLawsInfo = null;
 	private static JSONObject _stateComparatorInfo = null;
 
@@ -91,6 +97,10 @@ public class Main {
 			CommandLine line = parser.parse(cmdLineOptions, args);
 
 			parseHelpOption(line, cmdLineOptions);
+			//-----------------------------------------
+			//Parseo del modo
+			parseModeOption(line);
+			//-----------------------------------------
 			parseInFileOption(line);
 			// TODO add support of -o, -eo, and -s (define corresponding parse methods)
 			parseOutputFileOption(line);
@@ -124,6 +134,13 @@ public class Main {
 		// help
 		cmdLineOptions.addOption(Option.builder("h").longOpt("help").desc("Print this message.").build());
 
+		//----------------------------------------------------------------------------------------------------
+		// mode
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").desc("Execution Mode. Possible values: ’batch’\r\n" + 
+				"(Batch mode), ’gui’ (Graphical User\r\n" + 
+				"Interface mode). Default value: '" + _modeDefaultValue + "'.").build());
+		//----------------------------------------------------------------------------------------------------
+			
 		// input file
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Bodies JSON input file.").build());
 
@@ -187,7 +204,7 @@ public class Main {
 
 	private static void parseInFileOption(CommandLine line) throws ParseException {
 		_inFile = line.getOptionValue("i");
-		if (_inFile == null) {
+		if (_inFile == null && _mode == _modeDefaultValue) {
 			throw new ParseException("In batch mode an input file of bodies is required");
 		}
 	}
@@ -219,6 +236,10 @@ public class Main {
 	
 	private static void parseEpsilonTimeOption(CommandLine line) throws ParseException {
 		_expOut = line.getOptionValue("eo"); 
+	}
+	
+	private static void parseModeOption(CommandLine line) throws ParseException{
+		_mode = line.getOptionValue("m", _modeDefaultValue);
 	}
 
 	private static JSONObject parseWRTFactory(String v, Factory<?> factory) {
@@ -285,16 +306,48 @@ public class Main {
 		OutputStream os = (_outFile == null) ? System.out:new FileOutputStream(new File(_outFile));
 		ForceLaws forceLaws = _forceLawsFactory.createInstance(_forceLawsInfo);
 		PhysicsSimulator sim = new PhysicsSimulator(forceLaws,_dtime);
-		Controller ctrl = new Controller(sim,_bodyFactory);
+		Controller ctrl = new Controller(sim,_bodyFactory, _forceLawsFactory);
 		StateComparator sc = _stateComparatorFactory.createInstance(_stateComparatorInfo);
 		
 		ctrl.loadBodies(is);
 		ctrl.run(_steps, os, eo, sc);
 	}
 
+	private static void startGUIMode() throws Exception {
+		// TODO complete this method
+		ForceLaws forceLaws = _forceLawsFactory.createInstance(_forceLawsInfo);
+		PhysicsSimulator sim = new PhysicsSimulator(forceLaws,_dtime);
+		Controller ctrl = new Controller(sim,_bodyFactory, _forceLawsFactory);
+		StateComparator sc = _stateComparatorFactory.createInstance(_stateComparatorInfo);
+		
+		if(_inFile != null) {
+			InputStream is = new FileInputStream(_inFile);
+			ctrl.loadBodies(is);
+			is.close();
+		}
+		
+		InputStream eo = null;
+		if(_expOut != null) {
+			eo = new FileInputStream(new File(_expOut));
+		}
+
+		SwingUtilities.invokeAndWait(new Runnable() {
+			@Override
+			public void run() {
+				new MainWindow(ctrl);
+			}
+		});
+	}
+	
 	private static void start(String[] args) throws Exception {
 		parseArgs(args);
-		startBatchMode();
+		if(_mode == _modeDefaultValue) {
+			startBatchMode();
+		}
+		else {
+			startGUIMode();
+		}
+		
 	}
 
 	public static void main(String[] args) {

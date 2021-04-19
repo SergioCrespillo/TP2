@@ -10,8 +10,9 @@ public class PhysicsSimulator {
 	
 	private double _time;  // tiempo actual
 	private ForceLaws _forceLaws;  // leyes de la fuerza a aplicar
-	private List<Body> _bodies = new ArrayList<>();  // cuerpos de la simulacion
+	private List<Body> _bodies;  // cuerpos de la simulacion
 	private double _dt;  // tiempo delta
+	private List<SimulatorObserver> _observers;
 	
 	public PhysicsSimulator(ForceLaws FL, double tRealporPaso)
 	{
@@ -32,6 +33,8 @@ public class PhysicsSimulator {
 		{
 			throw new IllegalArgumentException("Tiempo no valido");
 		}
+		this._bodies = new ArrayList<>();
+		this._observers = new ArrayList<>();
 		this._time = 0.0;
 	}
 	
@@ -48,16 +51,65 @@ public class PhysicsSimulator {
 			b.move(_dt);
 		}
 		_time += _dt;
+		
+		for(SimulatorObserver s:this._observers) {
+			s.onAdvance(_bodies, _time);
+		}
 	}
 	
 	public void addBody(Body b){
 		if(!_bodies.contains(b))
 		{
 			_bodies.add(b);
+			
+			for(SimulatorObserver s:this._observers) {
+				s.onBodyAdded(_bodies, b);
+			}
 		}
 		else
 		{
 			throw new IllegalArgumentException("Ya existe el cuerpo");
+		}
+	}
+	
+	public void reset() {
+		
+		this._bodies.clear();
+		this._time = 0.0;
+		
+		for(SimulatorObserver s: this._observers) {
+			s.onReset(this._bodies, this._time, this._dt, this._forceLaws.toString());
+		}
+	}
+	
+	public void setDeltaTime(double dt) {
+		if(dt<0) {
+			throw new IllegalArgumentException("DeltaTime no valido");
+		}
+		
+		this._dt = dt;
+		
+		for(SimulatorObserver s:this._observers) {
+			s.onDeltaTimeChanged(_dt);
+		}
+	}
+	
+	public void setForceLawsLaws(ForceLaws forceLaws) {
+		if(forceLaws.equals(null)) {
+			throw new IllegalArgumentException("Leyes de fuerza invalidas");
+		}
+		
+		this._forceLaws = forceLaws;
+		
+		for(SimulatorObserver s:this._observers) {
+			s.onForceLawsChanged(this._forceLaws.toString());
+		}
+	}
+	
+	public void addObserver(SimulatorObserver o) {
+		if(!this._observers.contains(o)) {
+			this._observers.add(o);
+			o.onRegister(this._bodies, this._time, this._dt, this._forceLaws.toString());
 		}
 	}
 	
