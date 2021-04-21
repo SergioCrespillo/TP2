@@ -43,7 +43,6 @@ public class Main {
 	private final static String _forceLawsDefaultValue = "nlug";
 	private final static String _stateComparatorDefaultValue = "espeq";
 	private final static Integer _stepsDefaultValue = 150;
-	private final static String _modeDefaultValue = "batch";
 
 	// some attributes to stores values corresponding to command-line parameters
 	//
@@ -136,9 +135,8 @@ public class Main {
 
 		//----------------------------------------------------------------------------------------------------
 		// mode
-		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").desc("Execution Mode. Possible values: ’batch’\r\n" + 
-				"(Batch mode), ’gui’ (Graphical User\r\n" + 
-				"Interface mode). Default value: '" + _modeDefaultValue + "'.").build());
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Execution Mode. Possible values: "
+				+ "\'" + "batch" + "\'" + "(Batch mode)," + "\'" + "gui" + "\'" + " (Graphical User Interface mode). Default value: " + "\'" + "batch" + "\'" + ".").build());
 		//----------------------------------------------------------------------------------------------------
 			
 		// input file
@@ -204,13 +202,16 @@ public class Main {
 
 	private static void parseInFileOption(CommandLine line) throws ParseException {
 		_inFile = line.getOptionValue("i");
-		if (_inFile == null && _mode == _modeDefaultValue) {
+		if ((_inFile == null) && (_mode.equals("batch"))) {
 			throw new ParseException("In batch mode an input file of bodies is required");
 		}
 	}
 	
 	private static void parseOutputFileOption(CommandLine line) throws ParseException {
 		_outFile = line.getOptionValue("o");
+		if ((_outFile == null) && (_mode.equals("batch"))) {
+			throw new ParseException("An output file of bodies is required");
+		}
 	}
 	
 	private static void parseStepsOption(CommandLine line) throws ParseException {
@@ -239,7 +240,10 @@ public class Main {
 	}
 	
 	private static void parseModeOption(CommandLine line) throws ParseException{
-		_mode = line.getOptionValue("m", _modeDefaultValue);
+		_mode = line.getOptionValue("m");
+		if (_mode == null) {
+			throw new ParseException("Mode Error");
+		}
 	}
 
 	private static JSONObject parseWRTFactory(String v, Factory<?> factory) {
@@ -323,7 +327,6 @@ public class Main {
 		if(_inFile != null) {
 			InputStream is = new FileInputStream(_inFile);
 			ctrl.loadBodies(is);
-			is.close();
 		}
 		
 		InputStream eo = null;
@@ -341,11 +344,19 @@ public class Main {
 	
 	private static void start(String[] args) throws Exception {
 		parseArgs(args);
-		if(_mode == _modeDefaultValue) {
-			startBatchMode();
+		if(_mode.equals("batch")) {
+			try {
+				startBatchMode();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		else {
-			startGUIMode();
+		else if(_mode.equals("gui")) {
+			try {
+				startGUIMode();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
