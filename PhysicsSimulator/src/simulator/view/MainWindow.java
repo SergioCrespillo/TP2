@@ -24,15 +24,23 @@ public class MainWindow extends JFrame {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		setContentPane(mainPanel);
 		
-		mainPanel.add(new ControlPanel( _ctrl ), BorderLayout.PAGE_START);
-		mainPanel.add(new StatusBar( _ctrl ),BorderLayout. PAGE_END );
+		mainPanel.setPreferredSize(getPreferredSize());
+		ControlPanel cp = new ControlPanel(_ctrl);
+		StatusBar sb = new StatusBar(_ctrl);
+		cp.setLayout(new BoxLayout(cp, BoxLayout.Y_AXIS));
+		sb.setLayout(new BoxLayout(sb, BoxLayout.Y_AXIS));
+		JPanel content = new JPanel();
+		BodiesTable bt = new BodiesTable(_ctrl);
+		//Viewer v = new Viewer(_ctrl);
+		content.add(bt);
+		//content.add(v);
+		content.setLayout( new BoxLayout(content, BoxLayout.Y_AXIS));
 		
-		JPanel boxPanel = new JPanel();
-		
-		
-		this.setDefaultCloseOperation( DO_NOTHING_ON_CLOSE );
+		mainPanel.add(cp, BorderLayout.PAGE_START);
+		mainPanel.add(sb,BorderLayout. PAGE_END);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.pack();
-		this.setVisible( true );
+		this.setVisible(true);
 	}
 	
 	private JPanel createViewPanel(JComponent c , String title ) {
