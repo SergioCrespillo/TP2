@@ -18,8 +18,7 @@ public class BodiesTableModel extends AbstractTableModel implements SimulatorObs
 	
 	@Override
 	public int getRowCount() {
-		if (this._bodies == null) return 0;
-		else return this._bodies.size();
+		return _bodies == null ? 0 : _bodies.size();
 	}
 	
 	@Override
@@ -29,8 +28,7 @@ public class BodiesTableModel extends AbstractTableModel implements SimulatorObs
 	
 	@Override
 	public String getColumnName(int column) {
-		if (this.columnNames == null) return "";
-		else return this.columnNames[column];
+		return columnNames[column];
 	}
 	
 	@Override
