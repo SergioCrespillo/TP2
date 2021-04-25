@@ -28,16 +28,17 @@ public class StatusBar  extends JPanel implements SimulatorObserver {
 		this.setBorder( BorderFactory.createBevelBorder( 1 ));
 		// TODO complete the code to build the tool bar
 		JLabel time = new JLabel("Time: ");
-	    JLabel laws = new JLabel("Laws: ");
-	    JLabel bodies = new JLabel("Bodies: ");
 	    toolbar.add(time);
 	    toolbar.add(_currTime);
 	    toolbar.addSeparator();
+	    JLabel laws = new JLabel("Laws: ");
+	    toolbar.add(laws);
+	    toolbar.add(_currLaws);
+	    toolbar.addSeparator();
+	    JLabel bodies = new JLabel("Bodies: ");
 	    toolbar.add(bodies);
 	    toolbar.add(_numOfBodies);
 	    toolbar.addSeparator();
-	    toolbar.add(laws);
-	    toolbar.add(_currLaws);
 		this.add(toolbar);
 	}
 

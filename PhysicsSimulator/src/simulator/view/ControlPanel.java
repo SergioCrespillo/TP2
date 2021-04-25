@@ -1,6 +1,7 @@
 package simulator.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -48,6 +49,9 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		// TODO build the tool bar by adding buttons, etc.
 		JToolBar toolbar = new JToolBar();
 		
+		this._stepsSpinner.setPreferredSize(new Dimension(70,30));
+		this._stepsSpinner.setMaximumSize(_stepsSpinner.getPreferredSize());
+		
 		//los botones
 		filebutton.setIcon(new ImageIcon("resources/icons/open.png"));
 		filebutton.setToolTipText("This button opens a file");
@@ -56,8 +60,10 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-
+				JFileChooser fc = new JFileChooser();
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				fc.setCurrentDirectory(workingDirectory);
+				
 				int returnVal = fc.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 				 File file = fc.getSelectedFile();
@@ -85,6 +91,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 				try {
 					filebutton.setEnabled(false);
 					//gravitybutton.setEnabled(false);
+					runbutton.setEnabled(false);
 					_stopped = false;
 					_ctrl.setDeltaTime(Double.parseDouble(txtCajaDeTextoD.getText()));
 					run_sim((Integer)_stepsSpinner.getValue());
@@ -92,6 +99,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 					JOptionPane.showMessageDialog(runbutton, "No se puede realizar esta acción", "Error", JOptionPane.ERROR_MESSAGE);
 					filebutton.setEnabled(true);
 					//gravitybutton.setEnabled(true);
+					runbutton.setEnabled(true);
 				}
 			}
 		});
@@ -108,6 +116,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 					_stopped = true;
 					filebutton.setEnabled(true);
 					//gravitybutton.setEnabled(true);
+					runbutton.setEnabled(true);
 				}catch(IllegalArgumentException ex) {
 					JOptionPane.showMessageDialog(stopbutton, ex);
 				}
@@ -143,8 +152,9 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		toolbar.add(_stepsSpinner);
 		toolbar.addSeparator();
 	    toolbar.add(_delta);
-		toolbar.add(txtCajaDeTextoD);
-		toolbar.add(Box.createHorizontalGlue());
+			toolbar.add(txtCajaDeTextoD);
+			toolbar.addSeparator();
+			toolbar.add(Box.createHorizontalGlue());
 	    toolbar.add(closebutton, BorderLayout.EAST);
 	    this.add(toolbar);
 	}
@@ -174,6 +184,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 			// TODO enable all buttons
 			filebutton.setEnabled(true);
 			//gravitybutton.setEnabled(true);
+			runbutton.setEnabled(true);
 		}
 	}
 
