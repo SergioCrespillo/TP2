@@ -1,5 +1,6 @@
 package simulator.view;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.util.List;
@@ -11,11 +12,11 @@ import simulator.control.Controller;
 import simulator.model.Body;
 import simulator.model.SimulatorObserver;
 
-public class StatusBar  extends JPanel implements SimulatorObserver {
+public class StatusBar extends JPanel implements SimulatorObserver {
 
-	private JLabel _currTime = new JLabel(); // for current time
-	private JLabel _currLaws = new JLabel(); // for gravity laws
-	private JLabel _numOfBodies = new JLabel(); // for number of bodies
+	private JLabel _currTime; // for current time
+	private JLabel _currLaws; // for gravity laws
+	private JLabel _numOfBodies; // for number of bodies
 	
 	public StatusBar(Controller ctrl) {
 		initGUI();
@@ -24,21 +25,30 @@ public class StatusBar  extends JPanel implements SimulatorObserver {
 	
 	private void initGUI() {
 		JToolBar toolbar = new JToolBar();
-		this.setLayout( new FlowLayout( FlowLayout.LEFT ));
+		this.setLayout(new BorderLayout());
 		this.setBorder( BorderFactory.createBevelBorder( 1 ));
 		// TODO complete the code to build the tool bar
+		JPanel timeView = new JPanel();
 		JLabel time = new JLabel("Time: ");
-	    toolbar.add(time);
-	    toolbar.add(_currTime);
-	    toolbar.addSeparator();
+	    timeView.add(time);
+	    _currTime = new JLabel();
+	    timeView.add(_currTime);
+	    toolbar.add(timeView,BorderLayout.WEST);
+	    
+	    JPanel lawsView = new JPanel();
 	    JLabel laws = new JLabel("Laws: ");
-	    toolbar.add(laws);
-	    toolbar.add(_currLaws);
-	    toolbar.addSeparator();
+	    lawsView.add(laws);
+	    _currLaws = new JLabel();
+	    lawsView.add(_currLaws);
+	    toolbar.add(lawsView, BorderLayout.CENTER);
+	    
+	    JPanel bodiesView = new JPanel();
 	    JLabel bodies = new JLabel("Bodies: ");
-	    toolbar.add(bodies);
-	    toolbar.add(_numOfBodies);
-	    toolbar.addSeparator();
+	    bodiesView.add(bodies);
+	    _numOfBodies = new JLabel();
+	    bodiesView.add(_numOfBodies);
+	    toolbar.add(bodiesView,BorderLayout.EAST);
+	    
 		this.add(toolbar);
 	}
 

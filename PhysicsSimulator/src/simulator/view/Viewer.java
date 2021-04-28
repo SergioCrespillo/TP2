@@ -74,15 +74,17 @@ public class Viewer extends JComponent implements SimulatorObserver {
 					default:
 				}
 			}
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-			}
 
 			@Override
 			public void keyTyped(KeyEvent e) {
 				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		
@@ -135,7 +137,15 @@ public class Viewer extends JComponent implements SimulatorObserver {
 		gr.drawLine(_centerX, _centerY - 1, _centerX, _centerY + 1);
 		
 		// TODO draw bodies (with vectors if _showVectors is true)
-		
+		if(_showVectors) {
+			for(Body b:_bodies) {
+				gr.setColor(Color.blue);
+				gr.fillOval(_centerX + (int) (b.getPosition().getX()/_scale),_centerY + (int) (b.getPosition().getY()/_scale), 10, 10);
+				gr.drawString(b.getId(), _centerX + (int) (b.getPosition().getX()/_scale), _centerY + (int) (b.getPosition().getY()/_scale));
+				drawLineWithArrow(gr, (int) (b.getForce().getX()), (int) (b.getForce().getY()), (int)(b.getForce().direction().getX()), (int)(b.getForce().direction().getY()), 10, 10, Color.red, Color.red);
+				
+			}
+		}
 		
 		// TODO draw help if _showHelp is true}
 		if(_showHelp)
@@ -143,6 +153,7 @@ public class Viewer extends JComponent implements SimulatorObserver {
 			gr.setColor(Color.red);
 			gr.drawString("h: toggle help, +: zoom-in, -: zoom-out, =: fit", 10, 25);
 			gr.drawString(("Scaling ratio: " + this._scale), 10, 40);
+		
 		}
 	}
 	

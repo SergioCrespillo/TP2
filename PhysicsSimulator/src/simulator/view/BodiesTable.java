@@ -10,8 +10,9 @@ import javax.swing.border.TitledBorder;
 import simulator.control.Controller;
 
 public class BodiesTable extends JPanel {
+	protected static final long serialVersionUID = 1L;
 	
-	BodiesTable(Controller ctrl) 
+	public BodiesTable(Controller ctrl) 
 	{
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createTitledBorder(

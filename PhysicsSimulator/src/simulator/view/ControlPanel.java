@@ -12,6 +12,8 @@ import java.util.List;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,6 +23,10 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import simulator.control.Controller;
 import simulator.model.Body;
 import simulator.model.SimulatorObserver;
@@ -29,14 +35,15 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 	
 	private Controller _ctrl;
 	private boolean _stopped;
-	private JLabel _steps = new JLabel("Steps: ");
-	private JLabel _delta = new JLabel("Delta-Time: ");
-    private JTextField txtCajaDeTextoD = new JTextField();
-    private JSpinner _stepsSpinner = new JSpinner();
-	private JButton filebutton = new JButton();
-	private JButton runbutton = new JButton();
-	private JButton stopbutton = new JButton();
-	private JButton closebutton = new JButton();
+	private JLabel _steps;
+	private JLabel _delta;
+    private JTextField txtCajaDeTextoD;
+    private JSpinner _stepsSpinner;
+	private JButton filebutton;
+	private JButton forceLawsbutton;
+	private JButton runbutton;
+	private JButton stopbutton;
+	private JButton closebutton;
 	
 	public ControlPanel(Controller ctrl) {
 		_ctrl = ctrl;
@@ -46,11 +53,23 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 	}
 	
 	private void initGUI() {
-		// TODO build the tool bar by adding buttons, etc.
 		JToolBar toolbar = new JToolBar();
+		
+		_steps = new JLabel("Steps: ");
+		_delta = new JLabel("Delta-Time: ");
+	    txtCajaDeTextoD = new JTextField();
+	    _stepsSpinner = new JSpinner();
+		filebutton = new JButton();
+		forceLawsbutton = new JButton();
+		runbutton = new JButton();
+		stopbutton = new JButton();
+		closebutton = new JButton();
 		
 		this._stepsSpinner.setPreferredSize(new Dimension(70,30));
 		this._stepsSpinner.setMaximumSize(_stepsSpinner.getPreferredSize());
+		
+		this.txtCajaDeTextoD.setPreferredSize(new Dimension(70,30));
+		this.txtCajaDeTextoD.setMaximumSize(_stepsSpinner.getPreferredSize());
 		
 		//los botones
 		filebutton.setIcon(new ImageIcon("resources/icons/open.png"));
@@ -59,7 +78,6 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				JFileChooser fc = new JFileChooser();
 				File workingDirectory = new File(System.getProperty("user.dir"));
 				fc.setCurrentDirectory(workingDirectory);
@@ -73,11 +91,26 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 						_ctrl.reset();
 						_ctrl.loadBodies(in);
 					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
 						JOptionPane.showMessageDialog(filebutton, "Archivo no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				else System.out.println("load cancelled by user");
+			}
+		});
+		
+		forceLawsbutton.setIcon(new ImageIcon("resources/icons/physics.png"));
+		forceLawsbutton.setToolTipText("This button choose force laws");
+		forceLawsbutton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JDialog forceLawDialog = new JDialog();
+				JComboBox<String> forces = new JComboBox<>();
+				List<JSONObject> json = _ctrl.getForceLawsInfo();
+				
+				for(JSONObject j:json) {
+					forces.addItem(j.getString("desc"));
+				}
 			}
 		});
 		
@@ -87,19 +120,16 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {  
-				// TODO Auto-generated method stub
 				try {
-					filebutton.setEnabled(false);
-					//gravitybutton.setEnabled(false);
-					runbutton.setEnabled(false);
+					disabledButton();
 					_stopped = false;
 					_ctrl.setDeltaTime(Double.parseDouble(txtCajaDeTextoD.getText()));
 					run_sim((Integer)_stepsSpinner.getValue());
+					disabledButton();
 				}catch(ClassCastException ex) {
 					JOptionPane.showMessageDialog(runbutton, "No se puede realizar esta acción", "Error", JOptionPane.ERROR_MESSAGE);
-					filebutton.setEnabled(true);
-					//gravitybutton.setEnabled(true);
-					runbutton.setEnabled(true);
+					_stopped = true;
+					enabledButtons();
 				}
 			}
 		});
@@ -111,18 +141,14 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {  
-				// TODO Auto-generated method stub
 				try {
 					_stopped = true;
-					filebutton.setEnabled(true);
-					//gravitybutton.setEnabled(true);
-					runbutton.setEnabled(true);
+					enabledButtons();
 				}catch(IllegalArgumentException ex) {
 					JOptionPane.showMessageDialog(stopbutton, ex);
 				}
 			}
 		});
-		
 		
 		closebutton.setIcon(new ImageIcon("resources/icons/exit.png"));
 		closebutton.setToolTipText("This button closes the simulator");
@@ -152,9 +178,9 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		toolbar.add(_stepsSpinner);
 		toolbar.addSeparator();
 	    toolbar.add(_delta);
-			toolbar.add(txtCajaDeTextoD);
-			toolbar.addSeparator();
-			toolbar.add(Box.createHorizontalGlue());
+		toolbar.add(txtCajaDeTextoD);
+		toolbar.addSeparator();
+		toolbar.add(Box.createHorizontalGlue());
 	    toolbar.add(closebutton, BorderLayout.EAST);
 	    this.add(toolbar);
 	}
@@ -167,8 +193,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 				// TODO show the error in a dialog box
 				JOptionPane.showMessageDialog(runbutton, e);
 				// TODO enable all buttons
-				filebutton.setEnabled(true);
-				//gravitybutton.setEnabled(true);
+				enabledButtons();
 				_stopped = true;
 				return;
 			}
@@ -182,10 +207,20 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		else {
 			_stopped = true;
 			// TODO enable all buttons
-			filebutton.setEnabled(true);
-			//gravitybutton.setEnabled(true);
-			runbutton.setEnabled(true);
+			enabledButtons();
 		}
+	}
+	
+	private void enabledButtons() {
+		this.filebutton.setEnabled(true);
+		this.runbutton.setEnabled(true);
+		this.closebutton.setEnabled(true);
+	}
+	
+	private void disabledButton() {
+		this.filebutton.setEnabled(false);
+		this.runbutton.setEnabled(false);
+		this.closebutton.setEnabled(false);
 	}
 
 	@Override
