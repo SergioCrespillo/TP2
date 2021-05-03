@@ -19,14 +19,13 @@ public class ParametersTableModel extends AbstractTableModel {
 	private String columnNames[] = { "Key", "Value", "Description" };
 
 	public ParametersTableModel(Controller ctrl, String item) {
-		_data = new ArrayList<>();
 		value = new JTextField();
 		dataForce = ctrl.getForceLawsInfo();
 	}
 	
 	@Override
 	public int getRowCount() {
-		return _data == null ? 0 : _data.size();
+		return dataForce == null ? 0 : dataForce.size();
 	}
 	
 	@Override
@@ -42,13 +41,11 @@ public class ParametersTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Object s = null;
-		JSONObject fl = this._dataForce.get(rowIndex);
+		JSONObject fl = this.dataForce.get(rowIndex);
 		switch (columnIndex) {
-		 case 0: s = j; break;
-		 case 1: s = p.getMass(); break;
+		 case 0: s = fl.get("data"); break;
+		 case 1: s = value; break;
 		 case 2: s = p.getPosition();  break;
-		 case 3: s = p.getVelocity();  break;
-		 case 4: s = p.getForce();  break;
 		 default: assert (false);
 		}
 		return s;

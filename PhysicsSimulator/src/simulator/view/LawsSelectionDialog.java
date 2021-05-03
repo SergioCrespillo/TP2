@@ -1,4 +1,4 @@
-/*package simulator.view;
+package simulator.view;
 
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -25,7 +25,7 @@ public class LawsSelectionDialog extends JDialog{
 	private int _status;
 	private JComboBox<String> _laws;
 	private DefaultComboBoxModel<String> _lawsModel;
-	JSONBuilderDialog _dialog;
+	//JSONBuilderDialog _dialog;
 	
 	public LawsSelectionDialog(Frame parent) {
 		super(parent, true);
@@ -104,4 +104,3 @@ public class LawsSelectionDialog extends JDialog{
 	}
 
 }
-*/

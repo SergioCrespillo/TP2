@@ -46,7 +46,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 	private JButton runbutton;
 	private JButton stopbutton;
 	private JButton closebutton;
-	//private LawsSelectionDialog _dialog;
+	private LawsSelectionDialog _dialog;
 	
 	private MainWindow _parent;
 	
@@ -111,7 +111,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//select_forcelaw();
+				select_forcelaw();
 			}
 		});
 		
@@ -212,7 +212,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		}
 	}
 	
-	/*protected void select_forcelaw() {
+	protected void select_forcelaw() {
 		if(_dialog == null) {
 			_dialog = new LawsSelectionDialog(_parent);
 		}
@@ -222,7 +222,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 			System.out.println("Canceled");
 		}
 		else { System.out.println("You have selected: " + _dialog.getLaw()); }
-	}*/
+	}
 	
 	private void enabledButtons() {
 		this.filebutton.setEnabled(true);
