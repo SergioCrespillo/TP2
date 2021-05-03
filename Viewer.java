@@ -146,7 +146,6 @@ public class Viewer extends JComponent implements SimulatorObserver {
 				gr.setColor(Color.black);
 				gr.drawString(b.getId(), _centerX + (int) (b.getPosition().getX()/_scale), _centerY + (int) (b.getPosition().getY()/_scale));
 				drawLineWithArrow(gr, (int) (b.getForce().getX()), (int) (b.getForce().getY()), (int)(b.getForce().direction().getX()), (int)(b.getForce().direction().getY()), 10, 10, Color.red, Color.red);
-				
 			}
 		}
 		
