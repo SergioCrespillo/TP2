@@ -26,7 +26,7 @@ public class MainWindow extends JFrame {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		this.setContentPane(mainPanel);
 		
-		ControlPanel cp = new ControlPanel(_ctrl);
+		ControlPanel cp = new ControlPanel(_ctrl, this);
 		StatusBar sb = new StatusBar(_ctrl);
 		cp.setLayout( new BoxLayout(cp, BoxLayout.Y_AXIS));
 		sb.setLayout( new BoxLayout(sb, BoxLayout.Y_AXIS));

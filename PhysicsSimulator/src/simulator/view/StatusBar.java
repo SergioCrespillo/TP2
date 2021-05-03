@@ -25,7 +25,7 @@ public class StatusBar extends JPanel implements SimulatorObserver {
 	
 	private void initGUI() {
 		JToolBar toolbar = new JToolBar();
-		this.setLayout(new BorderLayout());
+		this.setLayout(new FlowLayout( FlowLayout.LEFT ));
 		this.setBorder( BorderFactory.createBevelBorder( 1 ));
 		// TODO complete the code to build the tool bar
 		JPanel timeView = new JPanel();
@@ -35,19 +35,19 @@ public class StatusBar extends JPanel implements SimulatorObserver {
 	    timeView.add(_currTime);
 	    toolbar.add(timeView,BorderLayout.WEST);
 	    
-	    JPanel lawsView = new JPanel();
-	    JLabel laws = new JLabel("Laws: ");
-	    lawsView.add(laws);
-	    _currLaws = new JLabel();
-	    lawsView.add(_currLaws);
-	    toolbar.add(lawsView, BorderLayout.CENTER);
-	    
 	    JPanel bodiesView = new JPanel();
 	    JLabel bodies = new JLabel("Bodies: ");
 	    bodiesView.add(bodies);
 	    _numOfBodies = new JLabel();
 	    bodiesView.add(_numOfBodies);
-	    toolbar.add(bodiesView,BorderLayout.EAST);
+	    toolbar.add(bodiesView,BorderLayout.CENTER);
+	    
+	    JPanel lawsView = new JPanel();
+	    JLabel laws = new JLabel("Laws: ");
+	    lawsView.add(laws);
+	    _currLaws = new JLabel();
+	    lawsView.add(_currLaws);
+	    toolbar.add(lawsView, BorderLayout.EAST);
 	    
 		this.add(toolbar);
 	}

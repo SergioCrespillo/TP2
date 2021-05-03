@@ -46,7 +46,8 @@ public class Viewer extends JComponent implements SimulatorObserver {
 		
 		_bodies = new ArrayList<>();
 		_scale = 1.0;
-		_showHelp = true;_showVectors = true;
+		_showHelp = true;
+		_showVectors = true;
 		addKeyListener(new KeyListener() {
 
 			@Override
@@ -65,7 +66,8 @@ public class Viewer extends JComponent implements SimulatorObserver {
 						repaint();
 						break;
 					case 'h':
-						_showHelp = !_showHelp;repaint();
+						_showHelp = !_showHelp;
+						repaint();
 						break;
 					case 'v':
 						_showVectors = !_showVectors;
@@ -137,13 +139,18 @@ public class Viewer extends JComponent implements SimulatorObserver {
 		gr.drawLine(_centerX, _centerY - 1, _centerX, _centerY + 1);
 		
 		// TODO draw bodies (with vectors if _showVectors is true)
-		if(_showVectors) {
-			for(Body b:_bodies) {
-				gr.setColor(Color.blue);
-				gr.fillOval(_centerX + (int) (b.getPosition().getX()/_scale),_centerY + (int) (b.getPosition().getY()/_scale), 10, 10);
-				gr.drawString(b.getId(), _centerX + (int) (b.getPosition().getX()/_scale), _centerY + (int) (b.getPosition().getY()/_scale));
-				drawLineWithArrow(gr, (int) (b.getForce().getX()), (int) (b.getForce().getY()), (int)(b.getForce().direction().getX()), (int)(b.getForce().direction().getY()), 10, 10, Color.red, Color.red);
-				
+		for(Body b:_bodies) {
+			gr.setColor(Color.blue);
+			int coorBodyX = _centerX + (int) (b.getPosition().getX()/_scale);
+			int coorBodyY = _centerY - (int) (b.getPosition().getY()/_scale);
+			gr.fillOval(coorBodyX,coorBodyY, 5, 5);
+			gr.setColor(Color.black);
+			gr.drawString(b.getId(), coorBodyX, coorBodyY);
+			if(_showVectors) {
+				drawLineWithArrow(gr, coorBodyX, coorBodyY,coorBodyX + (int) (b.getForce().direction().getX()), 
+						coorBodyY - (int) (b.getForce().direction().getY()), 5, 5, Color.red, Color.red);
+				drawLineWithArrow(gr, coorBodyX, coorBodyY, coorBodyX + (int) (b.getVelocity().direction().getX()),
+						coorBodyY - (int)(b.getVelocity().direction().getY()), 5, 5, Color.green, Color.green);
 			}
 		}
 		
@@ -151,7 +158,7 @@ public class Viewer extends JComponent implements SimulatorObserver {
 		if(_showHelp)
 		{
 			gr.setColor(Color.red);
-			gr.drawString("h: toggle help, +: zoom-in, -: zoom-out, =: fit", 10, 25);
+			gr.drawString("h: toggle help, v: toggle vectors, +: zoom-in, -: zoom-out, =: fit", 10, 25);
 			gr.drawString(("Scaling ratio: " + this._scale), 10, 40);
 		
 		}

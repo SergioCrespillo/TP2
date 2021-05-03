@@ -14,7 +14,6 @@ import simulator.model.ForceLaws;
 import simulator.model.SimulatorObserver;
 
 public class ParametersTableModel extends AbstractTableModel {
-	private List<ForceLaws> _data;
 	private List<JSONObject> dataForce;
 	private JTextField value;
 	private String columnNames[] = { "Key", "Value", "Description" };
@@ -43,7 +42,7 @@ public class ParametersTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Object s = null;
-		ForceLaws fl = this._data.get(rowIndex);
+		JSONObject fl = this._dataForce.get(rowIndex);
 		switch (columnIndex) {
 		 case 0: s = j; break;
 		 case 1: s = p.getMass(); break;

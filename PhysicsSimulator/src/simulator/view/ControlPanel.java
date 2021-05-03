@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 
 import simulator.control.Controller;
 import simulator.model.Body;
+import simulator.model.ForceLaws;
 import simulator.model.SimulatorObserver;
 
 public class ControlPanel extends JPanel implements SimulatorObserver {
@@ -44,10 +46,14 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 	private JButton runbutton;
 	private JButton stopbutton;
 	private JButton closebutton;
+	//private LawsSelectionDialog _dialog;
 	
-	public ControlPanel(Controller ctrl) {
+	private MainWindow _parent;
+	
+	public ControlPanel(Controller ctrl, MainWindow parent) {
 		_ctrl = ctrl;
 		_stopped = true;
+		_parent = parent;
 		initGUI();
 		_ctrl.addObserver(this);
 	}
@@ -65,6 +71,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		stopbutton = new JButton();
 		closebutton = new JButton();
 		
+		this._stepsSpinner.setValue(10000);
 		this._stepsSpinner.setPreferredSize(new Dimension(70,30));
 		this._stepsSpinner.setMaximumSize(_stepsSpinner.getPreferredSize());
 		
@@ -104,13 +111,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JDialog forceLawDialog = new JDialog();
-				JComboBox<String> forces = new JComboBox<>();
-				List<JSONObject> json = _ctrl.getForceLawsInfo();
-				
-				for(JSONObject j:json) {
-					forces.addItem(j.getString("desc"));
-				}
+				//select_forcelaw();
 			}
 		});
 		
@@ -170,7 +171,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		
 		toolbar.add(filebutton);
 	    toolbar.addSeparator();
-	    //toolbar.add(gravitybutton);
+	    toolbar.add(forceLawsbutton);
 	    toolbar.addSeparator();
 	    toolbar.add(runbutton);
 	    toolbar.add(stopbutton);
@@ -211,14 +212,28 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		}
 	}
 	
+	/*protected void select_forcelaw() {
+		if(_dialog == null) {
+			_dialog = new LawsSelectionDialog(_parent);
+		}
+		
+		int status = _dialog.open(_ctrl.getForceLawsInfo());
+		if (status == 0) {
+			System.out.println("Canceled");
+		}
+		else { System.out.println("You have selected: " + _dialog.getLaw()); }
+	}*/
+	
 	private void enabledButtons() {
 		this.filebutton.setEnabled(true);
+		this.forceLawsbutton.setEnabled(true);
 		this.runbutton.setEnabled(true);
 		this.closebutton.setEnabled(true);
 	}
 	
 	private void disabledButton() {
 		this.filebutton.setEnabled(false);
+		this.forceLawsbutton.setEnabled(false);
 		this.runbutton.setEnabled(false);
 		this.closebutton.setEnabled(false);
 	}
