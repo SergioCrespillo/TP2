@@ -214,14 +214,14 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 	
 	protected void select_forcelaw() {
 		if(_dialog == null) {
-			_dialog = new LawsSelectionDialog(_parent);
+			_dialog = new LawsSelectionDialog(_parent,_ctrl.getForceLawsInfo());
 		}
 		
 		int status = _dialog.open(_ctrl.getForceLawsInfo());
 		if (status == 0) {
 			System.out.println("Canceled");
 		}
-		else { System.out.println("You have selected: " + _dialog.getLaw()); }
+		else { System.out.println("You have selected: " /*+ _dialog.getLaw()*/); }
 	}
 	
 	private void enabledButtons() {
