@@ -147,10 +147,10 @@ public class Viewer extends JComponent implements SimulatorObserver {
 			gr.setColor(Color.black);
 			gr.drawString(b.getId(), coorBodyX, coorBodyY);
 			if(_showVectors) {
-				drawLineWithArrow(gr, coorBodyX, coorBodyY,coorBodyX + (int) (b.getForce().direction().getX()), 
-						coorBodyY - (int) (b.getForce().direction().getY()), 5, 5, Color.red, Color.red);
-				drawLineWithArrow(gr, coorBodyX, coorBodyY, coorBodyX + (int) (b.getVelocity().direction().getX()),
-						coorBodyY - (int)(b.getVelocity().direction().getY()), 5, 5, Color.green, Color.green);
+				drawLineWithArrow(gr, coorBodyX, coorBodyY,coorBodyX + (int) (b.getForce().direction().scale(20).getX()), 
+						coorBodyY - (int) (b.getForce().direction().scale(20).getY()), 5, 5, Color.red, Color.red);
+				drawLineWithArrow(gr, coorBodyX, coorBodyY, coorBodyX + (int) (b.getVelocity().direction().scale(20).getX()),
+						coorBodyY - (int)(b.getVelocity().direction().scale(20).getY()), 5, 5, Color.green, Color.green);
 			}
 		}
 		
@@ -191,6 +191,10 @@ public class Viewer extends JComponent implements SimulatorObserver {
 		x = xm*cos - ym*sin + x1;
 		ym = xm*sin + ym*cos + y1;
 		xm = x;
+		
+		x = xn * cos - yn * sin + x1;
+		yn = xn * sin + yn * cos + y1;
+		xn = x;
 		
 		int[] xpoints = { x2, (int) xm, (int) xn };
 		int[] ypoints = { y2, (int) ym, (int) yn };

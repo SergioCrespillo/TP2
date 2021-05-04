@@ -25,7 +25,7 @@ public class LawsSelectionDialog extends JDialog{
 	private int _status;
 	private JComboBox<String> _laws;
 	private DefaultComboBoxModel<String> _lawsModel;
-	//JSONBuilderDialog _dialog;
+	private JSONBuilderDialog _dialog;
 	
 	public LawsSelectionDialog(Frame parent) {
 		super(parent, true);
@@ -99,7 +99,7 @@ public class LawsSelectionDialog extends JDialog{
 		return _status;
 	}
 
-	ForceLaws getLaw() {
+	protected ForceLaws getLaw() {
 		return (ForceLaws) _lawsModel.getSelectedItem();
 	}
 
