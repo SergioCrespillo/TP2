@@ -33,20 +33,15 @@ public class LawsSelectionDialog extends JDialog{
 	private static final long serialVersionUID = 1L;
 
 	private int _status;
+	private int indiceElementoSeleccionado;
 	private List<JSONObject> listForce;
 	
 	private JComboBox<String> _laws;
 	private DefaultComboBoxModel<String> _lawsModel;
 	private JsonTableModel _dataTableModel;
 
-	// This table model stores internally the content of the table. Use
-	// getData() to get the content as JSON.
-	//
 	private class JsonTableModel extends AbstractTableModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private static final int NUMCOLUM = 3;
 		private static final int NUMFIL = 1;
@@ -61,27 +56,21 @@ public class LawsSelectionDialog extends JDialog{
 			_data = new String[numFil][_header.length];
 			refresh();
 		}
-		
-		public void clear() {
-			for (int i = 0; i < numFil; i++)
-				for (int j = 0; j < NUMCOLUM; j++)
-					_data[i][j] = "";
-			fireTableStructureChanged();
-		}
 
 		public void refresh() {
-			JSONObject forcelaw = listForce.get(_laws.getSelectedIndex());
+			JSONObject forcelaw = listForce.get(indiceElementoSeleccionado);
 			JSONObject data = forcelaw.getJSONObject("data");
 			numFil = data.length();
+			_data = new String[numFil][_header.length];
 			Set<String> keys = data.keySet();
 			int i = 0;
 			
 			for(String k:keys) {
 				_data[i][0] = k.toString();
+				_data[i][1] = "";
+				_data[i][2] = data.getString(k);
 				i++;
 			}
-			for (int j = 0; j < numFil; j++)
-				_data[j][2] = data.getString(_data[j][0]);
 			fireTableStructureChanged();
 		}
 
@@ -92,7 +81,17 @@ public class LawsSelectionDialog extends JDialog{
 
 		@Override
 		public int getRowCount() {
-			return _data.length;
+			JSONObject forcelaw = listForce.get(indiceElementoSeleccionado);
+			JSONObject data = forcelaw.getJSONObject("data");
+			numFil = data.length();
+			Set<String> keys = data.keySet();
+			int filas = 0;
+			
+			for(String k:keys) {
+				filas++;
+			}
+			
+			return filas;
 		}
 
 		@Override
@@ -130,20 +129,41 @@ public class LawsSelectionDialog extends JDialog{
 		//
 		public String getData() {
 			StringBuilder s = new StringBuilder();
+			JSONObject force = listForce.get(indiceElementoSeleccionado);
+			String type = force.getString("type");
 			s.append('{');
-			for (int i = 0; i < _data.length; i++) {
-				if (!_data[i][0].isEmpty() && !_data[i][1].isEmpty()) {
+			s.append('"');
+			s.append("type");
+			s.append('"');
+			s.append(":");
+			s.append('"');
+			s.append(type);
+			s.append('"');
+			s.append(',');
+			s.append('"');
+			s.append("data");
+			s.append('"');
+			s.append(":");
+			s.append('{');
+			
+			JSONObject data = force.getJSONObject("data");
+			Set<String> keys = data.keySet();
+			int i=0;
+			for (String k:keys) {
+				if (!_data[i][1].isEmpty()) {
 					s.append('"');
-					s.append(_data[i][0]);
+					s.append(k);
 					s.append('"');
 					s.append(':');
 					s.append(_data[i][1]);
 					s.append(',');
 				}
+				i++;
 			}
 
-			if (s.length() > 1)
+			if (s.length() == ',')
 				s.deleteCharAt(s.length() - 1);
+			s.append('}');
 			s.append('}');
 
 			return s.toString();
@@ -160,7 +180,7 @@ public class LawsSelectionDialog extends JDialog{
 
 		_status = 0;
 
-		setTitle("Build JSON from Table");
+		setTitle("Force Laws Selection");
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		setContentPane(mainPanel);
@@ -179,8 +199,7 @@ public class LawsSelectionDialog extends JDialog{
 		_laws = new JComboBox<>(_lawsModel);
 		for(JSONObject f: listForce)
 			_lawsModel.addElement(f.getString("desc"));
-		comboPanel.add(_laws);
-
+		
 		// data table
 		_dataTableModel = new JsonTableModel();
 		JTable dataTable = new JTable(_dataTableModel) {
@@ -197,9 +216,18 @@ public class LawsSelectionDialog extends JDialog{
 				return component;
 			}
 		};
-		JScrollPane tabelScroll = new JScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane tableScroll = new JScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
+		_laws.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				indiceElementoSeleccionado = _laws.getSelectedIndex();
+				_dataTableModel.refresh();
+			}
+		});
+		comboPanel.add(_laws);
 
 		// bottons
 		JPanel buttonsPanel = new JPanel();
@@ -222,6 +250,7 @@ public class LawsSelectionDialog extends JDialog{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				_status = 1;
+				indiceElementoSeleccionado = _laws.getSelectedIndex();
 				LawsSelectionDialog.this.setVisible(false);
 			}
 		});
@@ -231,7 +260,7 @@ public class LawsSelectionDialog extends JDialog{
 		mainPanel.add(help2);
 		mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		mainPanel.add(tabelScroll);
+		mainPanel.add(tableScroll);
 		mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		mainPanel.add(comboPanel);
@@ -252,15 +281,12 @@ public class LawsSelectionDialog extends JDialog{
 			setLocation(//
 					getParent().getLocation().x + getParent().getWidth() / 2 - getWidth() / 2, //
 					getParent().getLocation().y + getParent().getHeight() / 2 - getHeight() / 2);
-		_lawsModel.removeAllElements();
-		for(JSONObject f: law)
-			_lawsModel.addElement(f.getString("desc"));
 		pack();
 		setVisible(true);
 		return _status;
 	}
 
-	public String getJSON() {
-		return _dataTableModel.getData();
+	public JSONObject getForceLaw() {
+		return new JSONObject(_dataTableModel.getData());
 	}
 }

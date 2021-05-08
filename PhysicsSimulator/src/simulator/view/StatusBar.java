@@ -27,7 +27,7 @@ public class StatusBar extends JPanel implements SimulatorObserver {
 		JToolBar toolbar = new JToolBar();
 		this.setLayout(new FlowLayout( FlowLayout.LEFT ));
 		this.setBorder( BorderFactory.createBevelBorder( 1 ));
-		// TODO complete the code to build the tool bar
+		
 		JPanel timeView = new JPanel();
 		JLabel time = new JLabel("Time: ");
 	    timeView.add(time);
@@ -54,14 +54,12 @@ public class StatusBar extends JPanel implements SimulatorObserver {
 
 	@Override
 	public void onRegister(List<Body> bodies, double time, double dt, String fLawsDesc) {
-		// TODO Auto-generated method stub
 		_currLaws.setText(fLawsDesc);
 		_numOfBodies.setText(String.valueOf(bodies.size()));
 	}
 
 	@Override
 	public void onReset(List<Body> bodies, double time, double dt, String fLawsDesc) {
-		// TODO Auto-generated method stub
 		_currTime.setText(String.valueOf(time));
 		_currLaws.setText(fLawsDesc);
 		_numOfBodies.setText(String.valueOf(bodies.size()));
@@ -69,25 +67,21 @@ public class StatusBar extends JPanel implements SimulatorObserver {
 
 	@Override
 	public void onBodyAdded(List<Body> bodies, Body b) {
-		// TODO Auto-generated method stub
 		_numOfBodies.setText(String.valueOf(bodies.size()));
 	}
 
 	@Override
 	public void onAdvance(List<Body> bodies, double time) {
-		// TODO Auto-generated method stub
 		_currTime.setText(String.valueOf(time));
 	}
 
 	@Override
 	public void onDeltaTimeChanged(double dt) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onForceLawsChanged(String fLawsDesc) {
-		// TODO Auto-generated method stub
 		_currLaws.setText(fLawsDesc);
 	}
 

@@ -51,7 +51,7 @@ public class MainWindow extends JFrame {
 
 	public MainWindow() {
 
-		super("JTable Example");
+		super("Main Window");
 		initGUI();
 	}
 

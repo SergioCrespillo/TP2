@@ -36,7 +36,7 @@ public class Viewer extends JComponent implements SimulatorObserver {
 	}
 	
 	private void initGUI() {
-		// TODO add border with title
+		//add border with title
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createTitledBorder(
 					BorderFactory.createLineBorder(Color.black, 2), 
@@ -79,13 +79,11 @@ public class Viewer extends JComponent implements SimulatorObserver {
 
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -99,22 +97,22 @@ public class Viewer extends JComponent implements SimulatorObserver {
 			
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				
 			}
 
 			@Override
 			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				
 			}
 
 			@Override
 			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				
 			}
 		});
 	}
@@ -133,12 +131,12 @@ public class Viewer extends JComponent implements SimulatorObserver {
 		_centerX = getWidth() / 2;
 		_centerY = getHeight() / 2;
 		
-		// TODO draw a cross at center
+		//draw a cross at center
 		gr.setColor(Color.red);
 		gr.drawLine(_centerX - 1, _centerY, _centerX + 1, _centerY); 
 		gr.drawLine(_centerX, _centerY - 1, _centerX, _centerY + 1);
 		
-		// TODO draw bodies (with vectors if _showVectors is true)
+		// draw bodies (with vectors if _showVectors is true)
 		for(Body b:_bodies) {
 			gr.setColor(Color.blue);
 			int coorBodyX = _centerX + (int) (b.getPosition().getX()/_scale);
@@ -154,7 +152,7 @@ public class Viewer extends JComponent implements SimulatorObserver {
 			}
 		}
 		
-		// TODO draw help if _showHelp is true}
+		// draw help if _showHelp is true}
 		if(_showHelp)
 		{
 			gr.setColor(Color.red);
@@ -163,9 +161,6 @@ public class Viewer extends JComponent implements SimulatorObserver {
 		
 		}
 	}
-	
-	// other private/protected methods
-	// ...
 	
 	private void autoScale() {
 		double max = 1.0;
@@ -207,7 +202,6 @@ public class Viewer extends JComponent implements SimulatorObserver {
 
 	@Override
 	public void onRegister(List<Body> bodies, double time, double dt, String fLawsDesc) {
-		// TODO Auto-generated method stub
 		_bodies = bodies;
 		autoScale();
 		repaint();
@@ -215,7 +209,6 @@ public class Viewer extends JComponent implements SimulatorObserver {
 
 	@Override
 	public void onReset(List<Body> bodies, double time, double dt, String fLawsDesc) {
-		// TODO Auto-generated method stub
 		_bodies = bodies;
 		autoScale();
 		repaint();
@@ -223,7 +216,6 @@ public class Viewer extends JComponent implements SimulatorObserver {
 
 	@Override
 	public void onBodyAdded(List<Body> bodies, Body b) {
-		// TODO Auto-generated method stub
 		_bodies = bodies;
 		autoScale();
 		repaint();
@@ -231,19 +223,16 @@ public class Viewer extends JComponent implements SimulatorObserver {
 
 	@Override
 	public void onAdvance(List<Body> bodies, double time) {
-		// TODO Auto-generated method stub
 		repaint();
 	}
 
 	@Override
 	public void onDeltaTimeChanged(double dt) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onForceLawsChanged(String fLawsDesc) {
-		// TODO Auto-generated method stub
 		
 	}	
 }

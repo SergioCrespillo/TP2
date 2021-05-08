@@ -45,9 +45,6 @@ public class BodiesTableModel extends AbstractTableModel implements SimulatorObs
 		}
 		return s;
 	}
-	
-	// SimulatorObserver methods
-	// ...
 
 	@Override
 	public void onRegister(List<Body> bodies, double time, double dt, String gLawsDesc) {
@@ -75,13 +72,11 @@ public class BodiesTableModel extends AbstractTableModel implements SimulatorObs
 
 	@Override
 	public void onDeltaTimeChanged(double dt) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onForceLawsChanged(String fLawsDesc) {
-		// TODO Auto-generated method stub
 		
 	}
 }

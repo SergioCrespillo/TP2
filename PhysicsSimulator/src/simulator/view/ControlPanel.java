@@ -2,6 +2,7 @@ package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -48,12 +49,10 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 	private JButton closebutton;
 	private LawsSelectionDialog _dialog;
 	
-	private MainWindow _parent;
 	
-	public ControlPanel(Controller ctrl, MainWindow parent) {
+	public ControlPanel(Controller ctrl) {
 		_ctrl = ctrl;
 		_stopped = true;
-		_parent = parent;
 		initGUI();
 		_ctrl.addObserver(this);
 	}
@@ -71,7 +70,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		stopbutton = new JButton();
 		closebutton = new JButton();
 		
-		this._stepsSpinner.setValue(10000);
+		this._stepsSpinner.setValue(1);
 		this._stepsSpinner.setPreferredSize(new Dimension(70,30));
 		this._stepsSpinner.setMaximumSize(_stepsSpinner.getPreferredSize());
 		
@@ -157,7 +156,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {  
-				// TODO Auto-generated method stub
+				
 				Object [] opciones ={"SI","NO"};
 				int eleccion = JOptionPane.showOptionDialog(getRootPane(),"Desea cerrar la aplicacion","Mensaje de Confirmacion",
 				JOptionPane.YES_NO_OPTION,
@@ -191,9 +190,9 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 			try {
 				_ctrl.runGUI(1);
 			} catch (Exception e) {
-				// TODO show the error in a dialog box
+				//show the error in a dialog box
 				JOptionPane.showMessageDialog(runbutton, e);
-				// TODO enable all buttons
+				//enable all buttons
 				enabledButtons();
 				_stopped = true;
 				return;
@@ -207,21 +206,23 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		} 
 		else {
 			_stopped = true;
-			// TODO enable all buttons
+			//enable all buttons
 			enabledButtons();
 		}
 	}
 	
 	protected void select_forcelaw() {
 		if(_dialog == null) {
-			_dialog = new LawsSelectionDialog(_parent,_ctrl.getForceLawsInfo());
+			_dialog = new LawsSelectionDialog((Frame) SwingUtilities.getWindowAncestor(this),_ctrl.getForceLawsInfo());
 		}
 		
 		int status = _dialog.open(_ctrl.getForceLawsInfo());
 		if (status == 0) {
 			System.out.println("Canceled");
 		}
-		else { System.out.println("You have selected: " /*+ _dialog.getLaw()*/); }
+		else { 
+			_ctrl.setForceLaws(_dialog.getForceLaw());
+		}
 	}
 	
 	private void enabledButtons() {
@@ -240,37 +241,31 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 
 	@Override
 	public void onRegister(List<Body> bodies, double time, double dt, String fLawsDesc) {
-		// TODO Auto-generated method stub
 		txtCajaDeTextoD.setText(Double.toString(dt));
 	}
 
 	@Override
 	public void onReset(List<Body> bodies, double time, double dt, String fLawsDesc) {
-		// TODO Auto-generated method stub
 		txtCajaDeTextoD.setText(Double.toString(dt));
 	}
 
 	@Override
 	public void onBodyAdded(List<Body> bodies, Body b) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onAdvance(List<Body> bodies, double time) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onDeltaTimeChanged(double dt) {
-		// TODO Auto-generated method stub
 		txtCajaDeTextoD.setText(Double.toString(dt));
 	}
 
 	@Override
 	public void onForceLawsChanged(String fLawsDesc) {
-		// TODO Auto-generated method stub
 		
 	}
 
