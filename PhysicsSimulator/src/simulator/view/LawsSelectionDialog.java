@@ -186,10 +186,9 @@ public class LawsSelectionDialog extends JDialog{
 		setContentPane(mainPanel);
 
 		// help
-		JLabel help1 = new JLabel("<html><p>Select a force law and provide values for the parametes in the Value column (default values are used for </p></html>");
-		JLabel help2 = new JLabel("<html><p>parametes with no value).</p>");
+		JLabel help1 = new JLabel("<html><p>Select a force law and provide values "
+				+ "for the parametes in the Value column (default values are used for parametes with no value). </p></html>");
 		help1.setAlignmentX(CENTER_ALIGNMENT);
-		help2.setAlignmentX(CENTER_ALIGNMENT);
 		
 		//JCombobox
 		JPanel comboPanel = new JPanel();
@@ -257,7 +256,6 @@ public class LawsSelectionDialog extends JDialog{
 		buttonsPanel.add(okButton);
 		
 		mainPanel.add(help1);
-		mainPanel.add(help2);
 		mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		mainPanel.add(tableScroll);

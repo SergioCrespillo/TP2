@@ -41,9 +41,9 @@ public class MainWindow extends JFrame {
 		viewsPanel.add(tablesPanel);
 		
 		// tables
-		JPanel eventsView = createViewPanel(new JTable(new BodiesTableModel(_ctrl)), "Bodies");
-		eventsView.setPreferredSize(new Dimension(500, 200));
-		tablesPanel.add(eventsView);
+		JPanel bodiesView = createViewPanel(new JTable(new BodiesTableModel(_ctrl)), "Bodies");
+		bodiesView.setPreferredSize(new Dimension(500, 200));
+		tablesPanel.add(bodiesView);
 		
 		Viewer v = new Viewer(_ctrl);
 		tablesPanel.add(v);
