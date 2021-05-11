@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
 
@@ -63,14 +64,13 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		_steps = new JLabel("Steps: ");
 		_delta = new JLabel("Delta-Time: ");
 	    txtCajaDeTextoD = new JTextField();
-	    _stepsSpinner = new JSpinner();
+	    _stepsSpinner = new JSpinner(new SpinnerNumberModel(10000, 100, 10000, 1));
 		filebutton = new JButton();
 		forceLawsbutton = new JButton();
 		runbutton = new JButton();
 		stopbutton = new JButton();
 		closebutton = new JButton();
 		
-		this._stepsSpinner.setValue(1);
 		this._stepsSpinner.setPreferredSize(new Dimension(70,30));
 		this._stepsSpinner.setMaximumSize(_stepsSpinner.getPreferredSize());
 		
