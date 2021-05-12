@@ -223,6 +223,7 @@ public class Viewer extends JComponent implements SimulatorObserver {
 
 	@Override
 	public void onAdvance(List<Body> bodies, double time) {
+		_bodies = bodies;
 		repaint();
 	}
 

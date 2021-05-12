@@ -176,13 +176,13 @@ public class LawsSelectionDialog extends JDialog{
 		}
 		
 		private boolean tieneLetra(String s) {
-			String l = s.toLowerCase();
-			return (l.contains("a") || l.contains("b") || l.contains("c") || l.contains("d") || l.contains("e") ||
-					l.contains("f") || l.contains("g") || l.contains("h") || l.contains("i") || l.contains("j") ||
-					l.contains("k") || l.contains("l") || l.contains("m") || l.contains("n") || l.contains("ñ") || 
-					l.contains("o") || l.contains("p") || l.contains("q") || l.contains("r") || l.contains("s") ||
-					l.contains("t") || l.contains("u") || l.contains("v") || l.contains("w") || l.contains("x") ||
-					l.contains("y") || l.contains("z"));
+			for(int i=0;i<s.length();i++) {
+				Character c = s.charAt(i);
+				if(Character.isAlphabetic(c)) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 
