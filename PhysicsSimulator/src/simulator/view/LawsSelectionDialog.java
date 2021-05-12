@@ -24,6 +24,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import simulator.model.ForceLaws;
@@ -49,10 +50,12 @@ public class LawsSelectionDialog extends JDialog{
 
 		private String[] _header = { "Key", "Value", "Description" };
 		private int numFil;
+		private boolean incorrectValue;
 		String[][] _data;
 
 		JsonTableModel() {
 			numFil = NUMFIL;
+			incorrectValue = false;
 			_data = new String[numFil][_header.length];
 			refresh();
 		}
@@ -127,7 +130,7 @@ public class LawsSelectionDialog extends JDialog{
 		// string value they should add the quotes as well as part of the
 		// value (2nd column).
 		//
-		public String getData() {
+		public String getData() throws Exception {
 			StringBuilder s = new StringBuilder();
 			JSONObject force = listForce.get(indiceElementoSeleccionado);
 			String type = force.getString("type");
@@ -150,7 +153,10 @@ public class LawsSelectionDialog extends JDialog{
 			Set<String> keys = data.keySet();
 			int i=0;
 			for (String k:keys) {
-				if (!_data[i][1].isEmpty()) {
+				if(tieneLetra(_data[i][1])) {
+					throw new Exception("JSONObject['" + k + "'] is not a number");
+				}
+				else if (!_data[i][1].isEmpty()) {
 					s.append('"');
 					s.append(k);
 					s.append('"');
@@ -167,6 +173,16 @@ public class LawsSelectionDialog extends JDialog{
 			s.append('}');
 
 			return s.toString();
+		}
+		
+		private boolean tieneLetra(String s) {
+			String l = s.toLowerCase();
+			return (l.contains("a") || l.contains("b") || l.contains("c") || l.contains("d") || l.contains("e") ||
+					l.contains("f") || l.contains("g") || l.contains("h") || l.contains("i") || l.contains("j") ||
+					l.contains("k") || l.contains("l") || l.contains("m") || l.contains("n") || l.contains("ñ") || 
+					l.contains("o") || l.contains("p") || l.contains("q") || l.contains("r") || l.contains("s") ||
+					l.contains("t") || l.contains("u") || l.contains("v") || l.contains("w") || l.contains("x") ||
+					l.contains("y") || l.contains("z"));
 		}
 	}
 
@@ -284,7 +300,7 @@ public class LawsSelectionDialog extends JDialog{
 		return _status;
 	}
 
-	public JSONObject getForceLaw() {
+	public JSONObject getForceLaw() throws JSONException, Exception {
 		return new JSONObject(_dataTableModel.getData());
 	}
 }

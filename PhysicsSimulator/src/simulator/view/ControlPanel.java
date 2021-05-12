@@ -28,6 +28,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileSystemView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import simulator.control.Controller;
@@ -110,7 +111,11 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				select_forcelaw();
+				try {
+					select_forcelaw();
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(forceLawsbutton, "Something went wrong: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
@@ -211,7 +216,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		}
 	}
 	
-	protected void select_forcelaw() {
+	protected void select_forcelaw() throws JSONException, Exception {
 		if(_dialog == null) {
 			_dialog = new LawsSelectionDialog((Frame) SwingUtilities.getWindowAncestor(this),_ctrl.getForceLawsInfo());
 		}
