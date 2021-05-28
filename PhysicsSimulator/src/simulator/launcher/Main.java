@@ -209,9 +209,6 @@ public class Main {
 	
 	private static void parseOutputFileOption(CommandLine line) throws ParseException {
 		_outFile = line.getOptionValue("o");
-		if ((_outFile == null) && (_mode.equals("batch"))) {
-			throw new ParseException("An output file of bodies is required");
-		}
 	}
 	
 	private static void parseStepsOption(CommandLine line) throws ParseException {

@@ -1,6 +1,7 @@
 package simulator.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -11,6 +12,7 @@ public class PhysicsSimulator {
 	private double _time;  // tiempo actual
 	private ForceLaws _forceLaws;  // leyes de la fuerza a aplicar
 	private List<Body> _bodies;  // cuerpos de la simulacion
+	private List<Body> _bodiesUnmodifiable;
 	private double _dt;  // tiempo delta
 	private List<SimulatorObserver> _observers;
 	
@@ -35,6 +37,7 @@ public class PhysicsSimulator {
 		}
 		this._bodies = new ArrayList<>();
 		this._observers = new ArrayList<>();
+		_bodiesUnmodifiable = Collections.unmodifiableList(_bodies);
 		this._time = 0.0;
 	}
 	
@@ -53,7 +56,7 @@ public class PhysicsSimulator {
 		_time += _dt;
 		
 		for(SimulatorObserver s:this._observers) {
-			s.onAdvance(_bodies, _time);
+			s.onAdvance(_bodiesUnmodifiable, _time);
 		}
 	}
 	
@@ -63,7 +66,7 @@ public class PhysicsSimulator {
 			_bodies.add(b);
 			
 			for(SimulatorObserver s:this._observers) {
-				s.onBodyAdded(_bodies, b);
+				s.onBodyAdded(_bodiesUnmodifiable, b);
 			}
 		}
 		else
@@ -78,7 +81,7 @@ public class PhysicsSimulator {
 		this._time = 0.0;
 		
 		for(SimulatorObserver s: this._observers) {
-			s.onReset(this._bodies, this._time, this._dt, this._forceLaws.toString());
+			s.onReset(this._bodiesUnmodifiable, this._time, this._dt, this._forceLaws.toString());
 		}
 	}
 	
@@ -109,7 +112,7 @@ public class PhysicsSimulator {
 	public void addObserver(SimulatorObserver o) {
 		if(!this._observers.contains(o)) {
 			this._observers.add(o);
-			o.onRegister(this._bodies, this._time, this._dt, this._forceLaws.toString());
+			o.onRegister(this._bodiesUnmodifiable, this._time, this._dt, this._forceLaws.toString());
 		}
 	}
 	

@@ -100,6 +100,9 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 					} catch (FileNotFoundException e) {
 						JOptionPane.showMessageDialog(filebutton, "Archivo no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
 					}
+					catch(Exception e1) {
+						JOptionPane.showMessageDialog(filebutton, "Archivo no valido", "Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				else System.out.println("load cancelled by user");
 			}
@@ -130,7 +133,6 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 					_stopped = false;
 					_ctrl.setDeltaTime(Double.parseDouble(txtCajaDeTextoD.getText()));
 					run_sim((Integer)_stepsSpinner.getValue());
-					disabledButton();
 				}catch(ClassCastException ex) {
 					JOptionPane.showMessageDialog(runbutton, "No se puede realizar esta acción", "Error", JOptionPane.ERROR_MESSAGE);
 					_stopped = true;
